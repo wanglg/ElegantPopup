@@ -1,4 +1,4 @@
-package com.yeluo.lib.bubble.config;
+package com.quzhibo.lib.bubble.config;
 
 import android.graphics.Paint;
 import android.graphics.Path;

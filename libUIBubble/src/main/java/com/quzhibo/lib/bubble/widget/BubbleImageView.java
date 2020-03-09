@@ -1,4 +1,4 @@
-package com.yeluo.lib.bubble.widget;
+package com.quzhibo.lib.bubble.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -17,22 +17,22 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.view.ViewCompat;
 
-import com.yeluo.lib.bubble.R;
-import com.yeluo.lib.bubble.config.BubblePathBuilder;
-import com.yeluo.lib.bubble.config.ClipManager;
-import com.yeluo.lib.bubble.config.ClipPathManager;
-import com.yeluo.lib.bubble.config.Constants;
+import com.quzhibo.lib.bubble.R;
+import com.quzhibo.lib.bubble.config.BubblePathBuilder;
+import com.quzhibo.lib.bubble.config.ClipManager;
+import com.quzhibo.lib.bubble.config.ClipPathManager;
+import com.quzhibo.lib.bubble.config.Constants;
 
 /**
- * 气泡文本控件
+ * 气泡图片控件
  *
  * @author yeluodev1226
  * @date 2020-03-06 19:52
  */
-public class BubbleTextView extends AppCompatTextView {
+public class BubbleImageView extends AppCompatImageView {
     private final Paint clipPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Path clipPath = new Path();
     private final Path rectPath = new Path();
@@ -55,17 +55,17 @@ public class BubbleTextView extends AppCompatTextView {
     private boolean mUseCornerRadius;
     private boolean mFixPadding;
 
-    public BubbleTextView(Context context) {
+    public BubbleImageView(Context context) {
         super(context);
         init(context, null);
     }
 
-    public BubbleTextView(Context context, AttributeSet attrs) {
+    public BubbleImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public BubbleTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BubbleImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }

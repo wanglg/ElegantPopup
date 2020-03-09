@@ -1,2 +1,2 @@
-include ':app', ':lib-bubble'
+include ':app', ':libUIBubble'
 rootProject.name='BubbleFantasy'

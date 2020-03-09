@@ -1,4 +1,4 @@
-package com.yeluo.lib.bubble.widget;
+package com.quzhibo.lib.bubble.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -20,11 +20,11 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.view.ViewCompat;
 
-import com.yeluo.lib.bubble.R;
-import com.yeluo.lib.bubble.config.BubblePathBuilder;
-import com.yeluo.lib.bubble.config.ClipManager;
-import com.yeluo.lib.bubble.config.ClipPathManager;
-import com.yeluo.lib.bubble.config.Constants;
+import com.quzhibo.lib.bubble.R;
+import com.quzhibo.lib.bubble.config.BubblePathBuilder;
+import com.quzhibo.lib.bubble.config.ClipManager;
+import com.quzhibo.lib.bubble.config.ClipPathManager;
+import com.quzhibo.lib.bubble.config.Constants;
 
 /**
  * 气泡相对布局

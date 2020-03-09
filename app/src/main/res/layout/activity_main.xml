@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.yeluo.lib.bubble.widget.BubbleRelativeLayout
+    <com.quzhibo.lib.bubble.widget.BubbleRelativeLayout
         android:id="@+id/bubbleLayout"
         android:layout_width="300dp"
         android:layout_height="160dp"
@@ -39,7 +39,7 @@
             android:textSize="36sp"
             android:textStyle="bold" />
 
-    </com.yeluo.lib.bubble.widget.BubbleRelativeLayout>
+    </com.quzhibo.lib.bubble.widget.BubbleRelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"

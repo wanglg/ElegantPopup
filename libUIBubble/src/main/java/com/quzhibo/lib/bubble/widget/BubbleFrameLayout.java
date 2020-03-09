@@ -1,4 +1,4 @@
-package com.yeluo.lib.bubble.widget;
+package com.quzhibo.lib.bubble.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,24 +15,24 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.view.ViewCompat;
 
-import com.yeluo.lib.bubble.R;
-import com.yeluo.lib.bubble.config.BubblePathBuilder;
-import com.yeluo.lib.bubble.config.ClipManager;
-import com.yeluo.lib.bubble.config.ClipPathManager;
-import com.yeluo.lib.bubble.config.Constants;
+import com.quzhibo.lib.bubble.R;
+import com.quzhibo.lib.bubble.config.BubblePathBuilder;
+import com.quzhibo.lib.bubble.config.ClipManager;
+import com.quzhibo.lib.bubble.config.ClipPathManager;
+import com.quzhibo.lib.bubble.config.Constants;
 
 /**
- * 气泡线性布局
+ * 气泡绝对布局
  *
  * @author yeluodev1226
  * @date 2020-03-06 19:52
  */
-public class BubbleLinearLayout extends LinearLayout {
+public class BubbleFrameLayout extends FrameLayout {
     private final Paint clipPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Path clipPath = new Path();
     private final Path rectPath = new Path();
@@ -55,17 +55,17 @@ public class BubbleLinearLayout extends LinearLayout {
     private boolean mUseCornerRadius;
     private boolean mFixPadding;
 
-    public BubbleLinearLayout(Context context) {
+    public BubbleFrameLayout(Context context) {
         super(context);
         init(context, null);
     }
 
-    public BubbleLinearLayout(Context context, AttributeSet attrs) {
+    public BubbleFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public BubbleLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BubbleFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }

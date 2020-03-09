@@ -1,7 +1,6 @@
-package com.yeluo.lib.bubble.config;
+package com.quzhibo.lib.bubble.config;
 
 import android.graphics.Path;
-import android.graphics.RectF;
 
 /**
  * 气泡外部路径Builder

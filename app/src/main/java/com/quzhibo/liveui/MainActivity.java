@@ -23,12 +23,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.noober.background.drawable.DrawableCreator;
-import com.yeluo.lib.bubble.config.BubblePathBuilder;
-import com.yeluo.lib.bubble.config.BubbleType;
-import com.yeluo.lib.bubble.config.ClipPathManager;
-import com.yeluo.lib.bubble.config.Constants;
-import com.yeluo.lib.bubble.config.PositionType;
-import com.yeluo.lib.bubble.widget.BubbleRelativeLayout;
+import com.quzhibo.lib.bubble.config.BubblePathBuilder;
+import com.quzhibo.lib.bubble.config.BubbleType;
+import com.quzhibo.lib.bubble.config.ClipPathManager;
+import com.quzhibo.lib.bubble.config.Constants;
+import com.quzhibo.lib.bubble.config.PositionType;
+import com.quzhibo.lib.bubble.widget.BubbleRelativeLayout;
 
 /**
  * demo主界面
