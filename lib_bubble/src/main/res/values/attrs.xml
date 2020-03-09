@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BubbleFantasy">
+        <attr name="bf_bubbleType">
+            <flag name="left" value="0x0000" />
+            <flag name="top" value="0x0001" />
+            <flag name="right" value="0x0002" />
+            <flag name="bottom" value="0x0003" />
+        </attr>
+
+        <attr name="bf_arrowType">
+            <flag name="left" value="0x0100" />
+            <flag name="center" value="0x0101" />
+            <flag name="right" value="0x0102" />
+        </attr>
+        <attr name="bf_arrowWidth" format="dimension" />
+        <attr name="bf_arrowHeight" format="dimension" />
+        <attr name="bf_arrowOffset" format="dimension" />
+
+        <attr name="bf_cornerRadius" format="dimension" />
+        <attr name="bf_ltCornerRadius" format="dimension" />
+        <attr name="bf_rtCornerRadius" format="dimension" />
+        <attr name="bf_rbCornerRadius" format="dimension" />
+        <attr name="bf_lbCornerRadius" format="dimension" />
+        <attr name="bf_useCornerRadius" format="boolean" />
+
+        <attr name="bf_fixPadding" format="boolean" />
+
+        <attr name="bf_borderWidth" format="dimension" />
+        <attr name="bf_borderColor" format="color|reference" />
+    </declare-styleable>
+
+
+</resources>
