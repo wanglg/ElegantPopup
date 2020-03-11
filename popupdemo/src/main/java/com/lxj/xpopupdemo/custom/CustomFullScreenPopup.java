@@ -4,7 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.jifen.uquilib.popup.impl.FullScreenPopupView;
+import com.uq.uilib.popup.impl.FullScreenPopupView;
 import com.lxj.xpopupdemo.R;
 
 /**

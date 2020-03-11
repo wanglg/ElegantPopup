@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.jifen.uquilib.popup.impl.DrawerPopupView;
+import com.uq.uilib.popup.impl.DrawerPopupView;
 import com.lxj.xpopupdemo.R;
 
 import java.util.Random;

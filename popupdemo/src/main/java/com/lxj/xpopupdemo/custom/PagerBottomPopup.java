@@ -14,8 +14,8 @@ import androidx.core.widget.NestedScrollView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.jifen.uquilib.popup.impl.BottomPopupView;
-import com.jifen.uquilib.popup.util.XPopupUtils;
+import com.uq.uilib.popup.impl.BottomPopupView;
+import com.uq.uilib.popup.util.XPopupUtils;
 import com.lxj.xpopupdemo.R;
 
 

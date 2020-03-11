@@ -13,7 +13,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.jifen.uquilib.popup.impl.DrawerPopupView;
+import com.uq.uilib.popup.impl.DrawerPopupView;
 import com.lxj.xpopupdemo.R;
 
 

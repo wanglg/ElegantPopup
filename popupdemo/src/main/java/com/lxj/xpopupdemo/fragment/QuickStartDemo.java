@@ -3,10 +3,10 @@ package com.lxj.xpopupdemo.fragment;
 import android.util.Log;
 import android.view.View;
 
-import com.jifen.uquilib.popup.UPopup;
-import com.jifen.uquilib.popup.core.SimplePopupListener;
-import com.jifen.uquilib.popup.enums.PopupPosition;
-import com.jifen.uquilib.popup.impl.LoadingPopupView;
+import com.uq.uilib.popup.UPopup;
+import com.uq.uilib.popup.core.SimplePopupListener;
+import com.uq.uilib.popup.enums.PopupPosition;
+import com.uq.uilib.popup.impl.LoadingPopupView;
 import com.lxj.xpopupdemo.R;
 import com.lxj.xpopupdemo.custom.CustomDrawerPopupView;
 import com.lxj.xpopupdemo.custom.CustomFullScreenPopup;

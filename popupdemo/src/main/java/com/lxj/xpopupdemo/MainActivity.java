@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.jifen.uquilib.popup.UPopup;
+import com.uq.uilib.popup.UPopup;
 import com.lxj.xpopupdemo.fragment.QuickStartDemo;
 
 public class MainActivity extends AppCompatActivity {
