@@ -1,0 +1,26 @@
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/framework*
+/plugin
+
+# Ignore gradle files
+#signing.properties
+
+.idea/
+
+# Gradle files
+.gradle
+build/
+*/build/
+*/.idea/
+*.iml
+# ignore Libs dictionary
+captures/
+release-tools/
+freeline/
+freeline_core/
+freeline.py
+freeline_project_description.json
