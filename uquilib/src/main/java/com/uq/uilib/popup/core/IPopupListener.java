@@ -1,12 +1,14 @@
 package com.uq.uilib.popup.core;
 
+import android.view.View;
+
 /**
  * @Author: wangliugeng
  * @Date : 2020/3/10
  * @Email: leo3552@163.com
  * @Desciption:
  */
-public interface IPopupListener {
+public interface IPopupListener extends View.OnClickListener{
 
     /**
      * 弹窗的onCreate方法执行完调用

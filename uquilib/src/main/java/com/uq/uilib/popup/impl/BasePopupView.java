@@ -30,6 +30,7 @@ import com.uq.uilib.popup.core.IPopup;
 import com.uq.uilib.popup.core.PopupInfo;
 import com.uq.uilib.popup.enums.PopupAnimation;
 import com.uq.uilib.popup.enums.PopupStatus;
+import com.uq.uilib.popup.enums.PopupType;
 import com.uq.uilib.popup.util.KeyboardUtils;
 import com.uq.uilib.popup.util.XPopupUtils;
 import com.uq.uilib.popup.util.navbar.NavigationBarObserver;
@@ -327,6 +328,9 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
 
     @Override
     public boolean onBack() {
+        if (popupInfo.popupType != null && popupInfo.popupType == PopupType.AttachView) {
+            return false;
+        }
         if (popupInfo.isDismissOnBackPressed) {
             dismissOrHideSoftInput();
         }
@@ -624,6 +628,9 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (popupInfo.popupType != null && popupInfo.popupType == PopupType.AttachView) {
+            return super.onTouchEvent(event);
+        }
         // 如果自己接触到了点击，并且不在PopupContentView范围内点击，则进行判断是否是点击事件,如果是，则dismiss
         Rect rect = new Rect();
         getPopupContentView().getGlobalVisibleRect(rect);

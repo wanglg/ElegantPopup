@@ -3,15 +3,17 @@ package com.lxj.xpopupdemo.fragment;
 import android.util.Log;
 import android.view.View;
 
-import com.uq.uilib.popup.UPopup;
-import com.uq.uilib.popup.core.SimplePopupListener;
-import com.uq.uilib.popup.enums.PopupPosition;
-import com.uq.uilib.popup.impl.LoadingPopupView;
 import com.lxj.xpopupdemo.R;
+import com.lxj.xpopupdemo.custom.CustomAttachPopup2;
 import com.lxj.xpopupdemo.custom.CustomDrawerPopupView;
 import com.lxj.xpopupdemo.custom.CustomFullScreenPopup;
 import com.lxj.xpopupdemo.custom.PagerBottomPopup;
 import com.lxj.xpopupdemo.custom.PagerDrawerPopup;
+import com.uq.uilib.popup.UPopup;
+import com.uq.uilib.popup.core.SimplePopupListener;
+import com.uq.uilib.popup.enums.PopupPosition;
+import com.uq.uilib.popup.enums.PopupType;
+import com.uq.uilib.popup.impl.LoadingPopupView;
 
 
 /**
@@ -44,7 +46,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
         view.findViewById(R.id.btnFullScreenPopup).setOnClickListener(this);
 //        view.findViewById(R.id.btnAttachPopup1).setOnClickListener(this);
 //        view.findViewById(R.id.btnAttachPopup2).setOnClickListener(this);
-//        view.findViewById(R.id.tv1).setOnClickListener(this);
+        view.findViewById(R.id.tv1).setOnClickListener(this);
 //        view.findViewById(R.id.tv2).setOnClickListener(this);
 //        view.findViewById(R.id.tv3).setOnClickListener(this);
         drawerPopupView = new CustomDrawerPopupView(getContext());
@@ -89,38 +91,6 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                         , null, false)
                         .show();
                 break;
-//            case R.id.btnBindLayout:  //复用项目中已有布局，使用XPopup已有的交互能力
-//                new XPopup.Builder(getContext())
-//                        .setListener(new SimplePopupListener() {
-//                            @Override
-//                            public void onCreated() {
-//                                Log.e("tag", "弹窗创建了，每个弹窗的对象的onCreate只会执行一次");
-//                            }
-//
-//                            @Override
-//                            public void beforeShow() {
-//                                super.beforeShow();
-//                                Log.e("tag", "beforeShow，在每次show之前都会执行，可以用来进行多次的数据更新。");
-//                            }
-//
-//                            @Override
-//                            public void onShow() {
-//                                Log.e("tag", "onShow");
-//                            }
-//
-//                            @Override
-//                            public void onDismiss() {
-//                                Log.e("tag", "onDismiss");
-//                            }
-//
-//
-//                        }).asConfirm("复用项目已有布局", "您可以复用项目已有布局，来使用XPopup强大的交互能力和逻辑封装，弹窗的布局完全由你自己控制。\n" +
-//                                "注意：你自己的布局必须提供一些控件Id，否则XPopup找不到View。\n具体需要提供哪些Id，请查看文档[内置弹窗]一章。",
-//                        "关闭", "XPopup牛逼", null, false)
-//                        .bindLayout(R.layout.my_confim_popup) //绑定已有布局
-////                        .bindItemLayout() //带列表的弹窗还会有这样一个方法
-//                        .show();
-//                break;
 
 
             case R.id.btnShowLoading: //在中间弹出的Loading加载框
@@ -149,7 +119,15 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                         .asCustom(new PagerBottomPopup(getContext()))
                         .show();
                 break;
-
+            case R.id.tv1:
+                new UPopup.Builder(getContext())
+                        .atView(v)
+                        .popupType(PopupType.AttachView)
+                        .popupPosition(PopupPosition.Top)
+                        .hasShadowBg(false) // 去掉半透明背景
+                        .asCustom(new CustomAttachPopup2(getContext()))
+                        .show();
+                break;
             case R.id.btnShowDrawerLeft: //像DrawerLayout一样的Drawer弹窗
                 new UPopup.Builder(getContext())
 //                        .asCustom(new CustomDrawerPopupView(getContext()))

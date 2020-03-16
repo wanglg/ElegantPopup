@@ -1,5 +1,7 @@
 package com.uq.uilib.popup.core;
 
+import android.view.View;
+
 /**
  * @Author: wangliugeng
  * @Date : 2020/3/11
@@ -39,6 +41,11 @@ public class SimplePopupListener implements IPopupListener {
 
     @Override
     public void onClickOutside() {
+
+    }
+
+    @Override
+    public void onClick(View view) {
 
     }
 }
