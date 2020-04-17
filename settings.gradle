@@ -1,4 +1,2 @@
-include ':app', ':libUIBubble'
-rootProject.name='BubbleFantasy'
 include ':uquilib'
 include ':popupdemo'

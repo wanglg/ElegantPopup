@@ -93,7 +93,14 @@
             android:id="@+id/btnPagerBottomPopup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="显示复杂交互的Bottom弹窗（各种手势滑动嵌套）"
+            android:text="显示复杂交互的Bottom弹窗（view）"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnPagerBottomDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="显示复杂交互的Bottom弹窗（dialog）"
             android:textAllCaps="false" />
 
         <TextView
@@ -104,6 +111,13 @@
             android:gravity="center"
             android:text="点我看看"
             android:textColor="#fff" />
+
+        <Button
+            android:id="@+id/btnPositionMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自定义位置popup"
+            android:textAllCaps="false" />
 
         <!--        <TextView-->
         <!--            android:id="@+id/tv2"-->
@@ -169,7 +183,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="自定义全屏弹窗"
+            android:text="自定义全屏弹窗View"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnFullScreenDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="自定义全屏弹窗Dialog"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/launchDrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="launchDrop模式启动"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/launchLatest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="launchLatest模式启动"
             android:textAllCaps="false" />
 
         <!--        <LinearLayout-->
