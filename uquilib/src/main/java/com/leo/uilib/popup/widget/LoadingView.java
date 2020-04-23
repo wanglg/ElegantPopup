@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 
 
 /**
@@ -40,7 +40,7 @@ public class LoadingView extends View {
     public LoadingView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        stokeWidth = XPopupUtils.dp2px(context, stokeWidth);
+        stokeWidth = PopupUtils.dp2px(context, stokeWidth);
         paint.setStrokeWidth(stokeWidth);
     }
 
@@ -53,7 +53,7 @@ public class LoadingView extends View {
         centerX = getMeasuredWidth() / 2;
         centerY = getMeasuredHeight() / 2;
 
-        stokeWidth *= getMeasuredWidth() * 1f / XPopupUtils.dp2px(getContext(), 30);
+        stokeWidth *= getMeasuredWidth() * 1f / PopupUtils.dp2px(getContext(), 30);
         paint.setStrokeWidth(stokeWidth);
     }
 

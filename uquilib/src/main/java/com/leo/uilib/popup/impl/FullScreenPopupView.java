@@ -15,7 +15,7 @@ import com.leo.uilib.popup.UPopup;
 import com.leo.uilib.popup.animator.TranslateAnimator;
 import com.leo.uilib.popup.enums.PopupAnimation;
 import com.leo.uilib.popup.animator.PopupAnimator;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 
 
 public class FullScreenPopupView extends CenterPopupView {
@@ -52,7 +52,7 @@ public class FullScreenPopupView extends CenterPopupView {
         params.gravity = Gravity.TOP;
         contentView.setLayoutParams(params);
 
-        int actualNabBarHeight = isShowNavBar || XPopupUtils.isNavBarVisible(getContext()) ? XPopupUtils.getNavBarHeight() : 0;
+        int actualNabBarHeight = isShowNavBar || PopupUtils.isNavBarVisible(getContext()) ? PopupUtils.getNavBarHeight() : 0;
         if (rotation == 0) {
             contentView.setPadding(contentView.getPaddingLeft(), contentView.getPaddingTop(), contentView.getPaddingRight(),
                     actualNabBarHeight);
@@ -69,7 +69,7 @@ public class FullScreenPopupView extends CenterPopupView {
         super.dispatchDraw(canvas);
         if (popupInfo.hasStatusBarShadow) {
             paint.setColor(UPopup.statusBarShadowColor);
-            shadowRect = new Rect(0, 0, XPopupUtils.getWindowWidth(getContext()), XPopupUtils.getStatusBarHeight());
+            shadowRect = new Rect(0, 0, PopupUtils.getWindowWidth(getContext()), PopupUtils.getStatusBarHeight());
             canvas.drawRect(shadowRect, paint);
         }
     }

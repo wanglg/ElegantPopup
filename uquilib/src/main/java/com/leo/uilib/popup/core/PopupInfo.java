@@ -53,6 +53,9 @@ public class PopupInfo {
 
     public LaunchModel launchModel = LaunchModel.DEFAULT;
 
+    //优先级 数值越小 优先级越高 这里考虑到弹窗的种类 不规定具体的优先级的等级 默认优先级最高
+    public long priority;
+
     public View getAtView() {
         return atView;
     }

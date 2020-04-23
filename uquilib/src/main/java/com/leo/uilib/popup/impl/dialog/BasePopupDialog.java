@@ -2,6 +2,7 @@ package com.leo.uilib.popup.impl.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,7 @@ import com.leo.uilib.popup.core.IPopup;
 import com.leo.uilib.popup.core.IPopupWindow;
 import com.leo.uilib.popup.core.PopupInfo;
 import com.leo.uilib.popup.core.PopupManager;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 
 /**
  * @Author: wangliugeng
@@ -44,12 +45,17 @@ public abstract class BasePopupDialog extends AppCompatDialog implements IPopup,
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initData(popupInfo.extObject);
+        configViews();
+        requestData();
+    }
+
+    @Override
     public IPopup showPopup() {
         try {
-            initData(popupInfo.extObject);
-            configViews();
             show();
-            requestData();
         } catch (Exception e) {
             Log.e("s_popup", e.getMessage());
         }
@@ -78,7 +84,7 @@ public abstract class BasePopupDialog extends AppCompatDialog implements IPopup,
                 } else {
                     vl.width = getMaxWidth();
                 }
-                if (popupInfo.maxHeight>0){
+                if (popupInfo.maxHeight > 0) {
 
                 }
                 if (popupInfo.hasShadowBg) {
@@ -99,7 +105,7 @@ public abstract class BasePopupDialog extends AppCompatDialog implements IPopup,
      * @return
      */
     protected int getMaxWidth() {
-        return XPopupUtils.dp2px(getContext(), 288);
+        return PopupUtils.dp2px(getContext(), 288);
     }
 
     @Override
@@ -168,4 +174,13 @@ public abstract class BasePopupDialog extends AppCompatDialog implements IPopup,
 
     }
 
+    @Override
+    public int compareTo(IPopup o) {
+        if (popupInfo == null || o == null || o.getPopupInfo() == null) {
+            return 0;
+        }
+        long currentPriority = popupInfo.priority;
+        long comparePriority = o.getPopupInfo().priority;
+        return Long.compare(currentPriority, comparePriority);
+    }
 }

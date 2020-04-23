@@ -4,11 +4,14 @@ import android.content.Context;
 
 import androidx.annotation.Nullable;
 
+import com.leo.uilib.popup.enums.PopupType;
+
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.PriorityQueue;
 
 
 /**
@@ -20,9 +23,11 @@ import java.util.List;
 public class PopupManager {
     private static PopupManager popupManager;
     private LinkedHashMap<String, List<SoftReference<IPopup>>> linkedHashMap;
+    private LinkedHashMap<String, PriorityQueue<ComparatorSoftReference<IPopup>>> readyQueue;
 
     private PopupManager() {
         linkedHashMap = new LinkedHashMap<>();
+        readyQueue = new LinkedHashMap<>();
     }
 
     public static PopupManager getPopupManager() {
@@ -40,7 +45,7 @@ public class PopupManager {
         if (context == null) {
             return;
         }
-        String key = context.getClass().getName();
+        String key = context.hashCode() + "";
         List<SoftReference<IPopup>> list = linkedHashMap.get(key);
         if (list == null) {
             list = new ArrayList<>();
@@ -52,11 +57,40 @@ public class PopupManager {
 
     }
 
+    public void addQueue(Context context, IPopup iPopup) {
+        if (context == null) {
+            return;
+        }
+        String key = context.hashCode() + "";
+        PriorityQueue<ComparatorSoftReference<IPopup>> queue = readyQueue.get(key);
+        if (queue == null) {
+            queue = new PriorityQueue<>();
+            queue.offer(new ComparatorSoftReference<>(iPopup));
+            readyQueue.put(key, queue);
+        } else {
+            queue.offer(new ComparatorSoftReference<>(iPopup));
+            readyQueue.put(key, queue);
+        }
+    }
+
+    @Nullable
+    public IPopup getTopQueuePopup(Context context) {
+        if (context == null) {
+            return null;
+        }
+        String key = context.hashCode() + "";
+        PriorityQueue<ComparatorSoftReference<IPopup>> popupQueue = readyQueue.get(key);
+        if (popupQueue == null || popupQueue.isEmpty()) {
+            return null;
+        }
+        return popupQueue.poll().get();
+    }
+
     public void removePopup(Context context, IPopup iPopup) {
         if (context == null) {
             return;
         }
-        String key = context.getClass().getName();
+        String key = context.hashCode() + "";
         List<SoftReference<IPopup>> mTask = linkedHashMap.get(key);
         if (mTask != null) {
             Iterator<SoftReference<IPopup>> iterator = mTask.iterator();
@@ -70,16 +104,6 @@ public class PopupManager {
                     iterator.remove();
                 }
             }
-//            for (int i = mTask.size() - 1; i >= 0; i--) {
-//                SoftReference<IPopup> item = mTask.get(i);
-//                if (item == null) {
-//                    continue;
-//                }
-//                IPopup itemPopup = item.get();
-//                if (itemPopup != null && itemPopup == iPopup) {
-//                    mTask.remove(i);
-//                }
-//            }
             if (mTask.size() == 0) {
                 linkedHashMap.remove(key);
             }
@@ -92,7 +116,7 @@ public class PopupManager {
         if (context == null) {
             return null;
         }
-        String key = context.getClass().getName();
+        String key = context.hashCode() + "";
         List<SoftReference<IPopup>> popupList = linkedHashMap.get(key);
         if (popupList == null || popupList.isEmpty()) {
             return null;
@@ -103,6 +127,32 @@ public class PopupManager {
                 continue;
             }
             if (last.isDismiss()) {
+                continue;
+            }
+            return last;
+        }
+        return null;
+    }
+
+    @Nullable
+    public IPopup getTopCenterPopup(Context context) {
+        if (context == null) {
+            return null;
+        }
+        String key = context.hashCode() + "";
+        List<SoftReference<IPopup>> popupList = linkedHashMap.get(key);
+        if (popupList == null || popupList.isEmpty()) {
+            return null;
+        }
+        for (int i = popupList.size() - 1; i >= 0; i--) {
+            IPopup last = popupList.get(i).get();
+            if (last == null) {
+                continue;
+            }
+            if (last.isDismiss()) {
+                continue;
+            }
+            if (last.getPopupInfo() == null || last.getPopupInfo().popupType != PopupType.Center) {
                 continue;
             }
             return last;
@@ -127,8 +177,30 @@ public class PopupManager {
                     result.add(last);
                 }
             }
+        }
+        return result;
+    }
 
+    public List<IPopup> getAllCenterPopup(Context context) {
+        List<IPopup> result = new ArrayList<>();
+        if (context != null) {
+            String key = context.hashCode() + "";
+            List<SoftReference<IPopup>> popupList = linkedHashMap.get(key);
+            if (popupList != null && popupList.size() > 0) {
+                for (int i = 0; i < popupList.size(); i++) {
+                    IPopup last = popupList.get(i).get();
+                    if (last == null) {
+                        continue;
+                    }
+                    if (last.isDismiss()) {
+                        continue;
+                    }
+                    if (last.getPopupInfo() != null && last.getPopupInfo().popupType == PopupType.Center) {
+                        result.add(last);
+                    }
 
+                }
+            }
         }
         return result;
     }
@@ -137,8 +209,14 @@ public class PopupManager {
         if (context == null) {
             return;
         }
+        String key = context.hashCode() + "";
         for (IPopup popup : getAllPopup(context)) {
             popup.dismiss();
+        }
+        PriorityQueue<ComparatorSoftReference<IPopup>> queue = readyQueue.get(key);
+        if (queue != null) {
+            queue.clear();
+            readyQueue.remove(key);
         }
     }
 }

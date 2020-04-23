@@ -137,6 +137,11 @@ public class UPopup {
             return this;
         }
 
+        public Builder setPriority(long priority) {
+            this.popupInfo.priority = priority;
+            return this;
+        }
+
         /**
          * 设置弹窗监视的View
          *
@@ -332,27 +337,7 @@ public class UPopup {
             this.popupInfo.launchModel = launchModel;
             return this;
         }
-        /**
-         * 是否点击弹窗背景时将点击事件透传到Activity下，默认是不透传，目前会引发很多不可控的问题，暂时关闭。
-         *
-         * @param isClickThrough
-         * @return
-         */
-//        public Builder isClickThrough(boolean isClickThrough) {
-//            this.popupInfo.isClickThrough = isClickThrough;
-//            return this;
-//        }
 
-        /**
-         * 设置弹窗显示和隐藏的回调监听
-         *
-         * @param xPopupCallback
-         * @return
-         */
-//        public Builder setPopupCallback(XPopupCallback xPopupCallback) {
-//            this.popupInfo.xPopupCallback = xPopupCallback;
-//            return this;
-//        }
 
         /****************************************** 便捷方法 ****************************************/
         /**
@@ -386,59 +371,7 @@ public class UPopup {
         }
 
 
-//
-//        /**
-//         * 显示带有输入框，确认和取消对话框
-//         *
-//         * @param title           对话框标题，传空串会隐藏标题
-//         * @param content         对话框内容,，传空串会隐藏
-//         * @param inputContent    输入框文字内容，会覆盖hint
-//         * @param hint            输入框默认文字
-//         * @param confirmListener 点击确认的监听器
-//         * @param cancelListener  点击取消的监听器
-//         * @return
-//         */
-//        public InputConfirmPopupView asInputConfirm(String title, String content, String inputContent, String hint, OnInputConfirmListener confirmListener, OnCancelListener cancelListener) {
-//            popupType(PopupType.Center);
-//            InputConfirmPopupView popupView = new InputConfirmPopupView(this.context);
-//            popupView.setTitleContent(title, content, hint);
-//            popupView.inputContent = inputContent;
-//            popupView.setListener(confirmListener, cancelListener);
-//            popupView.popupInfo = this.popupInfo;
-//            return popupView;
-//        }
-//
-//        public InputConfirmPopupView asInputConfirm(String title, String content, String inputContent, String hint, OnInputConfirmListener confirmListener) {
-//            return asInputConfirm(title, content, inputContent, hint, confirmListener, null);
-//        }
-//
-//        public InputConfirmPopupView asInputConfirm(String title, String content, String hint, OnInputConfirmListener confirmListener) {
-//            return asInputConfirm(title, content, null, hint, confirmListener, null);
-//        }
-//
-//        public InputConfirmPopupView asInputConfirm(String title, String content, OnInputConfirmListener confirmListener) {
-//            return asInputConfirm(title, content, null, null, confirmListener, null);
-//        }
-
-
-        //        public CenterListPopupView asCenterList(String title, String[] data, int[] iconIds, int checkedPosition, OnSelectListener selectListener) {
-//            popupType(PopupType.Center);
-//            CenterListPopupView popupView = new CenterListPopupView(this.context)
-//                    .setStringData(title, data, iconIds)
-//                    .setCheckedPosition(checkedPosition)
-//                    .setOnSelectListener(selectListener);
-//            popupView.popupInfo = this.popupInfo;
-//            return popupView;
-//        }
-//
-//        public CenterListPopupView asCenterList(String title, String[] data, OnSelectListener selectListener) {
-//            return asCenterList(title, data, null, -1, selectListener);
-//        }
-//
-//        public CenterListPopupView asCenterList(String title, String[] data, int[] iconIds, OnSelectListener selectListener) {
-//            return asCenterList(title, data, iconIds, -1, selectListener);
-//        }
-//
+        //
 //        /**
 //         * 显示在中间加载的弹窗
 //         *
@@ -533,82 +466,7 @@ public class UPopup {
 //            return popupView;
 //        }
 //
-//        /**
-//         * 大图浏览类型弹窗，单张图片使用场景
-//         *
-//         * @param srcView           源View，就是你点击的那个ImageView，弹窗消失的时候需回到该位置。如果实在没有这个View，可以传空，但是动画变的非常僵硬，适用于在Webview点击场景
-//         * @param url               资源id，url或者文件路径
-//         * @param isInfinite        是否需要无限滚动，默认为false
-//         * @param placeholderColor  占位View的填充色，默认为-1
-//         * @param placeholderStroke 占位View的边框色，默认为-1
-//         * @param placeholderRadius 占位View的圆角大小，默认为-1
-//         * @param isShowSaveBtn     是否显示保存按钮，默认显示
-//         * @return
-//         */
-//        public ImageViewerPopupView asImageViewer(ImageView srcView, Object url, boolean isInfinite, int placeholderColor, int placeholderStroke, int placeholderRadius,
-//                                                  boolean isShowSaveBtn, XPopupImageLoader imageLoader) {
-//            popupType(PopupType.ImageViewer);
-//            ImageViewerPopupView popupView = new ImageViewerPopupView(this.context)
-//                    .setSingleSrcView(srcView, url)
-//                    .isInfinite(isInfinite)
-//                    .setPlaceholderColor(placeholderColor)
-//                    .setPlaceholderStrokeColor(placeholderStroke)
-//                    .setPlaceholderRadius(placeholderRadius)
-//                    .isShowSaveButton(isShowSaveBtn)
-//                    .setXPopupImageLoader(imageLoader);
-//            popupView.popupInfo = this.popupInfo;
-//            return popupView;
-//        }
-//
-//        /**
-//         * 大图浏览类型弹窗，多张图片使用场景
-//         *
-//         * @param srcView               源View，就是你点击的那个ImageView，弹窗消失的时候需回到该位置。如果实在没有这个View，可以传空，但是动画变的非常僵硬，适用于在Webview点击场景
-//         * @param currentPosition       指定显示图片的位置
-//         * @param urls                  图片url集合
-//         * @param srcViewUpdateListener 当滑动ViewPager切换图片后，需要更新srcView，此时会执行该回调，你需要调用updateSrcView方法。
-//         * @return
-//         */
-//        public ImageViewerPopupView asImageViewer(ImageView srcView, int currentPosition, List<Object> urls,
-//                                                  OnSrcViewUpdateListener srcViewUpdateListener, XPopupImageLoader imageLoader) {
-//            return asImageViewer(srcView, currentPosition, urls, false,false, -1, -1, -1, true, srcViewUpdateListener, imageLoader);
-//        }
-//
-//        /**
-//         * 大图浏览类型弹窗，多张图片使用场景
-//         *
-//         * @param srcView               源View，就是你点击的那个ImageView，弹窗消失的时候需回到该位置。如果实在没有这个View，可以传空，但是动画变的非常僵硬，适用于在Webview点击场景
-//         * @param currentPosition       指定显示图片的位置
-//         * @param urls                  图片url集合
-//         * @param isInfinite            是否需要无限滚动，默认为false
-//         * @param isShowPlaceHolder     是否显示默认的占位View，默认为false
-//         * @param placeholderColor      占位View的填充色，默认为-1
-//         * @param placeholderStroke     占位View的边框色，默认为-1
-//         * @param placeholderRadius     占位View的圆角大小，默认为-1
-//         * @param isShowSaveBtn         是否显示保存按钮，默认显示
-//         * @param srcViewUpdateListener 当滑动ViewPager切换图片后，需要更新srcView，此时会执行该回调，你需要调用updateSrcView方法。
-//         * @return
-//         */
-//        public ImageViewerPopupView asImageViewer(ImageView srcView, int currentPosition, List<Object> urls,
-//                                                  boolean isInfinite, boolean isShowPlaceHolder,
-//                                                  int placeholderColor, int placeholderStroke, int placeholderRadius, boolean isShowSaveBtn,
-//                                                  OnSrcViewUpdateListener srcViewUpdateListener, XPopupImageLoader imageLoader) {
-//            popupType(PopupType.ImageViewer);
-//            ImageViewerPopupView popupView = new ImageViewerPopupView(this.context)
-//                    .setSrcView(srcView, currentPosition)
-//                    .setImageUrls(urls)
-//                    .isInfinite(isInfinite)
-//                    .isShowPlaceholder(isShowPlaceHolder)
-//                    .setPlaceholderColor(placeholderColor)
-//                    .setPlaceholderStrokeColor(placeholderStroke)
-//                    .setPlaceholderRadius(placeholderRadius)
-//                    .isShowSaveButton(isShowSaveBtn)
-//                    .setSrcViewUpdateListener(srcViewUpdateListener)
-//                    .setXPopupImageLoader(imageLoader);
-//            popupView.popupInfo = this.popupInfo;
-//            return popupView;
-//        }
-//
+
         public IPopup asCustom(IPopup popupView) {
             if (popupView instanceof CenterPopupView) {
                 popupType(PopupType.Center);

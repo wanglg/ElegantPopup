@@ -16,7 +16,7 @@ import androidx.core.view.ViewCompat;
 import com.leo.uilib.popup.UPopup;
 import com.leo.uilib.popup.animator.ShadowBgAnimator;
 import com.leo.uilib.popup.enums.LayoutStatus;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 
 
 /**
@@ -117,7 +117,7 @@ public class SmartDragLayout extends FrameLayout implements NestedScrollingParen
                 // click in child rect
                 Rect rect = new Rect();
                 child.getGlobalVisibleRect(rect);
-                if (!XPopupUtils.isInRect(event.getRawX(), event.getRawY(), rect) && dismissOnTouchOutside) {
+                if (!PopupUtils.isInRect(event.getRawX(), event.getRawY(), rect) && dismissOnTouchOutside) {
                     float distance = (float) Math.sqrt(Math.pow(event.getX() - touchX, 2) + Math.pow(event.getY() - touchY, 2));
                     if (distance < ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
                         performClick();

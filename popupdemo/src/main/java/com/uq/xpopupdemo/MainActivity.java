@@ -13,6 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.leo.uilib.popup.UPopup;
+import com.leo.uilib.popup.core.PopupManager;
 import com.uq.xpopupdemo.fragment.QuickStartDemo;
 
 public class MainActivity extends AppCompatActivity {
@@ -81,5 +82,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.removeAllViews();
         viewPager = null;
         pageInfos = null;
+        PopupManager.getPopupManager().dismissAllPopup(this);
     }
 }

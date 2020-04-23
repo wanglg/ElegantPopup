@@ -6,7 +6,7 @@ package com.leo.uilib.popup.core;
  * @Email: leo3552@163.com
  * @Desciption: 窗口控制器
  */
-public interface IPopup {
+public interface IPopup extends Comparable<IPopup> {
 
     IPopup showPopup();
 

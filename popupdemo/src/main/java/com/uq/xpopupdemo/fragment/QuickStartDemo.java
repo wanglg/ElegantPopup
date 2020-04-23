@@ -48,6 +48,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
         view.findViewById(R.id.btnFullScreenDialog).setOnClickListener(this);
         view.findViewById(R.id.launchDrop).setOnClickListener(this);
         view.findViewById(R.id.launchLatest).setOnClickListener(this);
+        view.findViewById(R.id.launchBuffer).setOnClickListener(this);
 //        view.findViewById(R.id.btnAttachPopup1).setOnClickListener(this);
 //        view.findViewById(R.id.btnAttachPopup2).setOnClickListener(this);
         view.findViewById(R.id.tv1).setOnClickListener(this);
@@ -231,7 +232,32 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                             .showPopup();
                 }
                 break;
+            case R.id.launchBuffer:
+                for (int i = 0; i < 8; i++) {
+                    new UPopup.Builder(getContext())
+                            .launchModel(LaunchModel.BUFFER)
+                            .setPriority(i == 5 ? -1 : i)
+                            .setListener(new SimplePopupListener() {
+                                @Override
+                                public void onCreated() {
+                                    Log.e("tag", "弹窗创建了");
+                                }
 
+                                @Override
+                                public void onShow() {
+                                    Log.e("tag", "onShow");
+                                }
+
+                                @Override
+                                public void onDismiss() {
+                                    Log.e("tag", "onDismiss");
+                                }
+                            }).asConfirm("BUFFER" + i, "床前明月光，疑是地上霜；举头望明月，低头思故乡。",
+                            "取消", "确定"
+                            , null, false)
+                            .showPopup();
+                }
+                break;
             default:
                 break;
 

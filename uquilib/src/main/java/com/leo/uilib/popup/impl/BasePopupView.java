@@ -36,7 +36,7 @@ import com.leo.uilib.popup.enums.PopupAnimation;
 import com.leo.uilib.popup.enums.PopupStatus;
 import com.leo.uilib.popup.enums.PopupType;
 import com.leo.uilib.popup.util.KeyboardUtils;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 import com.leo.uilib.popup.util.navbar.NavigationBarObserver;
 import com.leo.uilib.popup.util.navbar.OnNavigationBarListener;
 
@@ -92,7 +92,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         }
         //apply size dynamic
         if (!(this instanceof FullScreenPopupView)) {
-            XPopupUtils.setWidthHeight(getTargetSizeView(),
+            PopupUtils.setWidthHeight(getTargetSizeView(),
                     (getMaxWidth() != 0 && getPopupWidth() > getMaxWidth()) ? getMaxWidth() : getPopupWidth(),
                     (getMaxHeight() != 0 && getPopupHeight() > getMaxHeight()) ? getMaxHeight() : getPopupHeight()
             );
@@ -181,7 +181,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
     }
 
     protected void applyFull() {
-        FrameLayout.LayoutParams params = (LayoutParams) getLayoutParams();
+        MarginLayoutParams params = (LayoutParams) getLayoutParams();
         params.topMargin = 0;
         params.leftMargin = 0;
         params.bottomMargin = 0;
@@ -206,6 +206,15 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
                         iPopup.dismiss();
                     }
                 }
+            } else if (popupInfo.launchModel == LaunchModel.BUFFER) {
+                if (popupInfo.priority == 0) {
+                    popupInfo.priority = System.currentTimeMillis();
+                }
+                IPopup iPopup = PopupManager.getPopupManager().getTopCenterPopup(getContext());
+                if (iPopup != null) {
+                    PopupManager.getPopupManager().addQueue(getContext(), this);
+                    interceptShow = true;
+                }
             }
         }
         return interceptShow;
@@ -214,19 +223,19 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
     protected void applySize(boolean isShowNavBar) {
         MarginLayoutParams params = (MarginLayoutParams) getLayoutParams();
         int rotation = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-        boolean isNavBarShown = isShowNavBar || XPopupUtils.isNavBarVisible(getContext());
+        boolean isNavBarShown = isShowNavBar || PopupUtils.isNavBarVisible(getContext());
         if (rotation == 0) {
             params.leftMargin = 0;
             params.rightMargin = 0;
-            params.bottomMargin = isNavBarShown ? XPopupUtils.getNavBarHeight() : 0;
+            params.bottomMargin = isNavBarShown ? PopupUtils.getNavBarHeight() : 0;
         } else if (rotation == 1) {
             params.bottomMargin = 0;
-            params.rightMargin = isNavBarShown ? XPopupUtils.getNavBarHeight() : 0;
+            params.rightMargin = isNavBarShown ? PopupUtils.getNavBarHeight() : 0;
             params.leftMargin = 0;
         } else if (rotation == 3) {
             params.bottomMargin = 0;
             params.leftMargin = 0;
-            params.rightMargin = isNavBarShown ? XPopupUtils.getNavBarHeight() : 0;
+            params.rightMargin = isNavBarShown ? PopupUtils.getNavBarHeight() : 0;
         }
         setLayoutParams(params);
     }
@@ -254,11 +263,11 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
                         return;
                     }
                     if (height == 0) { // 说明对话框隐藏
-                        XPopupUtils.moveDown(BasePopupView.this);
+                        PopupUtils.moveDown(BasePopupView.this);
                         hasMoveUp = false;
                     } else {
                         //when show keyboard, move up
-                        XPopupUtils.moveUpToKeyboard(height, BasePopupView.this);
+                        PopupUtils.moveUpToKeyboard(height, BasePopupView.this);
                         hasMoveUp = true;
                     }
                 });
@@ -301,8 +310,8 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
             if (popupInfo != null && popupInfo.popupListener != null) {
                 popupInfo.popupListener.onShow();
             }
-            if (XPopupUtils.getDecorViewInvisibleHeight((Activity) getContext()) > 0 && !hasMoveUp) {
-                XPopupUtils.moveUpToKeyboard(XPopupUtils.getDecorViewInvisibleHeight((Activity) getContext()), BasePopupView.this);
+            if (PopupUtils.getDecorViewInvisibleHeight((Activity) getContext()) > 0 && !hasMoveUp) {
+                PopupUtils.moveUpToKeyboard(PopupUtils.getDecorViewInvisibleHeight((Activity) getContext()), BasePopupView.this);
             }
         }
     };
@@ -322,7 +331,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
 
         //let all EditText can process back pressed.
         ArrayList<EditText> list = new ArrayList<>();
-        XPopupUtils.findAllEditText(list, (ViewGroup) getPopupContentView());
+        PopupUtils.findAllEditText(list, (ViewGroup) getPopupContentView());
         for (int i = 0; i < list.size(); i++) {
             final EditText et = list.get(i);
             et.setOnKeyListener(new BackPressListener());
@@ -624,6 +633,17 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
                     KeyboardUtils.removeLayoutChangeListener(BasePopupView.this);
                 }
             }
+            //展示缓存的弹框
+            if (getContext() instanceof Activity) {
+                Activity activity = (Activity) getContext();
+                if (!activity.isFinishing()) {
+                    IPopup queuePopup = PopupManager.getPopupManager().getTopQueuePopup(getContext());
+                    if (queuePopup != null) {
+                        queuePopup.showPopup();
+                    }
+                }
+            }
+
         }
     };
 
@@ -692,7 +712,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         // 如果自己接触到了点击，并且不在PopupContentView范围内点击，则进行判断是否是点击事件,如果是，则dismiss
         Rect rect = new Rect();
         getPopupContentView().getGlobalVisibleRect(rect);
-        if (!XPopupUtils.isInRect(event.getX(), event.getY(), rect)) {
+        if (!PopupUtils.isInRect(event.getX(), event.getY(), rect)) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     x = event.getX();
@@ -734,5 +754,15 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    @Override
+    public int compareTo(IPopup o) {
+        if (popupInfo == null || o == null || o.getPopupInfo() == null) {
+            return 0;
+        }
+        long currentPriority = popupInfo.priority;
+        long comparePriority = o.getPopupInfo().priority;
+        return Long.compare(currentPriority, comparePriority);
     }
 }

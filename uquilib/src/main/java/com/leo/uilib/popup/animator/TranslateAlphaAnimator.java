@@ -6,7 +6,7 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.leo.uilib.popup.UPopup;
 import com.leo.uilib.popup.enums.PopupAnimation;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 
 
 /**
@@ -34,8 +34,8 @@ public class TranslateAlphaAnimator extends PopupAnimator {
     }
 
     private void applyTranslation() {
-        int halfWidthOffset = XPopupUtils.getWindowWidth(targetView.getContext())/2 - targetView.getMeasuredWidth()/2;
-        int halfHeightOffset = XPopupUtils.getWindowHeight(targetView.getContext())/2 - targetView.getMeasuredHeight()/2;
+        int halfWidthOffset = PopupUtils.getWindowWidth(targetView.getContext())/2 - targetView.getMeasuredWidth()/2;
+        int halfHeightOffset = PopupUtils.getWindowHeight(targetView.getContext())/2 - targetView.getMeasuredHeight()/2;
         switch (popupAnimation){
             case TranslateAlphaFromLeft:
                 targetView.setTranslationX(-(targetView.getMeasuredWidth()/* + halfWidthOffset*/));

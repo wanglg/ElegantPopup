@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.leo.uilib.popup.core.IPopupListener;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 
 
 /**
@@ -44,7 +44,7 @@ public class PartShadowContainer extends FrameLayout {
         implView.getLocationInWindow(location);
         Rect implViewRect = new Rect(location[0], location[1], location[0] + implView.getMeasuredWidth(),
                 location[1] + implView.getMeasuredHeight());
-        if (!XPopupUtils.isInRect(event.getRawX(), event.getRawY(), implViewRect)) {
+        if (!PopupUtils.isInRect(event.getRawX(), event.getRawY(), implViewRect)) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     x = event.getX();

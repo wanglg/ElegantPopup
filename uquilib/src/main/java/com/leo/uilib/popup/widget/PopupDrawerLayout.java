@@ -22,7 +22,7 @@ import com.leo.uilib.popup.UPopup;
 import com.leo.uilib.popup.enums.LayoutStatus;
 import com.leo.uilib.popup.enums.PopupPosition;
 import com.leo.uilib.popup.animator.ShadowBgAnimator;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 
 
 /**
@@ -127,7 +127,7 @@ public class PopupDrawerLayout extends FrameLayout {
             child.getLocationInWindow(location);
             Rect rect = new Rect(location[0], location[1], location[0] + child.getWidth(),
                     location[1] + child.getHeight());
-            boolean inRect = XPopupUtils.isInRect(x, y, rect);
+            boolean inRect = PopupUtils.isInRect(x, y, rect);
             if (inRect && child instanceof ViewGroup) {
                 if (child instanceof ViewPager) {
                     ViewPager pager = (ViewPager) child;
@@ -289,7 +289,7 @@ public class PopupDrawerLayout extends FrameLayout {
         if (isDrawStatusBarShadow) {
             if (paint == null) {
                 paint = new Paint();
-                shadowRect = new Rect(0, 0, getMeasuredHeight(), XPopupUtils.getStatusBarHeight());
+                shadowRect = new Rect(0, 0, getMeasuredHeight(), PopupUtils.getStatusBarHeight());
             }
             paint.setColor((Integer) argbEvaluator.evaluate(fraction, defaultColor, UPopup.statusBarShadowColor));
             canvas.drawRect(shadowRect, paint);

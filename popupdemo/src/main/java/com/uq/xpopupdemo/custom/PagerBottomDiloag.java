@@ -15,7 +15,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.leo.uilib.popup.impl.dialog.BottomSheetPopupDialog;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 import com.uq.xpopupdemo.R;
 
 ;import org.json.JSONObject;
@@ -67,7 +67,7 @@ public class PagerBottomDiloag extends BottomSheetPopupDialog {
 
     @Override
     protected int getMaxHeight() {
-        return (XPopupUtils.dp2px(getContext(), 450));
+        return (PopupUtils.dp2px(getContext(), 450));
     }
 
     class PAdapter extends PagerAdapter {

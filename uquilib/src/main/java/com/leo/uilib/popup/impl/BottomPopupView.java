@@ -11,7 +11,7 @@ import com.leo.uilib.popup.R;
 import com.leo.uilib.popup.animator.PopupAnimator;
 import com.leo.uilib.popup.enums.PopupStatus;
 import com.leo.uilib.popup.util.KeyboardUtils;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 import com.leo.uilib.popup.widget.SmartDragLayout;
 
 
@@ -40,7 +40,7 @@ public class BottomPopupView extends BasePopupView {
         getPopupImplView().setTranslationX(popupInfo.offsetX);
         getPopupImplView().setTranslationY(popupInfo.offsetY);
 
-        XPopupUtils.applyPopupSize((ViewGroup) contentView, getMaxWidth(), getMaxHeight());
+        PopupUtils.applyPopupSize((ViewGroup) contentView, getMaxWidth(), getMaxHeight());
 
         bottomPopupContainer.setOnCloseListener(new SmartDragLayout.OnCloseListener() {
             @Override
@@ -136,7 +136,7 @@ public class BottomPopupView extends BasePopupView {
 
     @Override
     protected int getMaxWidth() {
-        return popupInfo.maxWidth == 0 ? XPopupUtils.getWindowWidth(getContext())
+        return popupInfo.maxWidth == 0 ? PopupUtils.getWindowWidth(getContext())
                 : popupInfo.maxWidth;
     }
 

@@ -13,7 +13,7 @@ import com.leo.uilib.popup.R;
 import com.leo.uilib.popup.enums.PopupAnimation;
 import com.leo.uilib.popup.animator.PopupAnimator;
 import com.leo.uilib.popup.animator.ScaleAlphaAnimator;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 
 
 /**
@@ -44,7 +44,7 @@ public class CenterPopupView extends BasePopupView {
         centerPopupContainer.addView(contentView, params);
         getPopupContentView().setTranslationX(popupInfo.offsetX);
         getPopupContentView().setTranslationY(popupInfo.offsetY);
-        XPopupUtils.applyPopupSize((ViewGroup) getPopupContentView(), getMaxWidth(), getMaxHeight());
+        PopupUtils.applyPopupSize((ViewGroup) getPopupContentView(), getMaxWidth(), getMaxHeight());
     }
 
     @Override
@@ -65,7 +65,7 @@ public class CenterPopupView extends BasePopupView {
 
     @Override
     protected int getMaxWidth() {
-        return popupInfo.maxWidth == 0 ? (int) (XPopupUtils.getWindowWidth(getContext()) * 0.86f)
+        return popupInfo.maxWidth == 0 ? (int) (PopupUtils.getWindowWidth(getContext()) * 0.86f)
                 : popupInfo.maxWidth;
     }
 

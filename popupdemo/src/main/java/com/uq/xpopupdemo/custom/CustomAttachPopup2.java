@@ -9,10 +9,7 @@ import com.leo.uilib.popup.impl.AttachPopupView;
 import com.leo.uilib.popup.impl.BasePopupView;
 import com.uq.xpopupdemo.R;
 
-/**
- * Description:
- * Create by lxj, at 2019/3/13
- */
+
 public class CustomAttachPopup2 extends AttachPopupView {
     public CustomAttachPopup2(@NonNull Context context) {
         super(context);
@@ -23,6 +20,13 @@ public class CustomAttachPopup2 extends AttachPopupView {
         return R.layout.custom_attach_popup2;
     }
 
+    @Override
+    public void configViews() {
+        super.configViews();
+        findViewById(R.id.close).setOnClickListener(v -> {
+            dismiss();
+        });
+    }
 
     //如果要自定义弹窗的背景，不要给布局设置背景图片，重写这个方法返回一个Drawable即可
     @Override

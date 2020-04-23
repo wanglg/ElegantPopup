@@ -33,7 +33,7 @@ import androidx.core.view.ViewCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.leo.uilib.popup.R;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 
 
 /**
@@ -250,7 +250,7 @@ public abstract class BottomSheetPopupDialog extends BasePopupDialog {
 
     @Override
     protected int getMaxWidth() {
-        return XPopupUtils.getWindowWidth(getContext());
+        return PopupUtils.getWindowWidth(getContext());
     }
 
 

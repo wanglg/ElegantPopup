@@ -6,7 +6,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.leo.uilib.popup.R;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 
 import org.json.JSONObject;
 
@@ -51,6 +51,6 @@ public abstract class FullScreenPopupDialog extends BasePopupDialog {
 
     @Override
     protected int getMaxWidth() {
-        return XPopupUtils.getWindowWidth(mContext);
+        return PopupUtils.getWindowWidth(mContext);
     }
 }

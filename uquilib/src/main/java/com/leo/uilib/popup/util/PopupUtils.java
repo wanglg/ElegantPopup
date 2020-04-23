@@ -27,7 +27,7 @@ import com.leo.uilib.popup.impl.FullScreenPopupView;
 
 import java.util.ArrayList;
 
-public class XPopupUtils {
+public class PopupUtils {
     public static int getWindowWidth(Context context) {
         return ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth();
     }
@@ -243,8 +243,8 @@ public class XPopupUtils {
 
         //执行上移
         if (pv instanceof FullScreenPopupView ||
-                (popupWidth == XPopupUtils.getWindowWidth(pv.getContext()) &&
-                        popupHeight == (XPopupUtils.getWindowHeight(pv.getContext()) + XPopupUtils.getStatusBarHeight()))
+                (popupWidth == PopupUtils.getWindowWidth(pv.getContext()) &&
+                        popupHeight == (PopupUtils.getWindowHeight(pv.getContext()) + PopupUtils.getStatusBarHeight()))
         ) {
             // 如果是全屏弹窗，特殊处理，只要输入框没被盖住，就不移动。
             if (focusBottom + keyboardHeight < windowHeight) {

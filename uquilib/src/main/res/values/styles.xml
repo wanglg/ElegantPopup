@@ -41,6 +41,7 @@
     <style name="BottomDialogStyle" parent="Theme.AppCompat.Dialog">
         <item name="android:backgroundDimAmount">?attr/bottom_sheet_background_dim_amount</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 </resources>

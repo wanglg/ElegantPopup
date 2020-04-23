@@ -12,7 +12,7 @@ import com.leo.uilib.popup.R;
 import com.leo.uilib.popup.animator.PopupAnimator;
 import com.leo.uilib.popup.animator.ScrollScaleAnimator;
 import com.leo.uilib.popup.enums.PopupPosition;
-import com.leo.uilib.popup.util.XPopupUtils;
+import com.leo.uilib.popup.util.PopupUtils;
 
 import static com.leo.uilib.popup.enums.PopupAnimation.ScaleAlphaFromCenter;
 
@@ -31,9 +31,9 @@ public class PositionPopupView extends BasePopupView {
     @Override
     protected void initPopupContent() {
         super.initPopupContent();
-        XPopupUtils.applyPopupSize((ViewGroup) getPopupContentView(), getMaxWidth(), getMaxHeight(), () -> {
+        PopupUtils.applyPopupSize((ViewGroup) getPopupContentView(), getMaxWidth(), getMaxHeight(), () -> {
             if (popupInfo.isCenterHorizontal) {
-                float left = (XPopupUtils.getWindowWidth(getContext()) - attachPopupContainer.getMeasuredWidth()) / 2f;
+                float left = (PopupUtils.getWindowWidth(getContext()) - attachPopupContainer.getMeasuredWidth()) / 2f;
                 attachPopupContainer.setTranslationX(left);
             } else {
                 attachPopupContainer.setTranslationX(popupInfo.offsetX);
