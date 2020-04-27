@@ -1,2 +1,2 @@
-include ':uquilib'
+include ':uilib'
 include ':popupdemo'

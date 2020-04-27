@@ -36,7 +36,7 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.lxj:easyadapter:1.1.1'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
-    implementation project(':uquilib')
+    implementation project(':uilib')
     implementation 'com.blankj:utilcode:1.24.2'
     implementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
     implementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.2'
