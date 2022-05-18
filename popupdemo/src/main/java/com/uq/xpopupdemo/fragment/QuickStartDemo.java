@@ -26,6 +26,8 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
         return R.layout.fragment_quickstart;
     }
 
+    PagerBottomPopup pagerBottomPopup;
+
     @Override
     public void init(View view) {
         view.findViewById(R.id.btnShowConfirm).setOnClickListener(this);
@@ -41,6 +43,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
         view.findViewById(R.id.launchLatest).setOnClickListener(this);
         view.findViewById(R.id.launchBuffer).setOnClickListener(this);
         view.findViewById(R.id.tv1).setOnClickListener(this);
+        view.findViewById(R.id.reuseDialog).setOnClickListener(this);
         drawerPopupView = new CustomDrawerPopupView(getContext());
 
     }
@@ -86,6 +89,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
             case R.id.btnPagerBottomPopup: //自定义的底部弹窗
                 new Popup.Builder(getContext())
 //                        .moveUpToKeyboard(false) //如果不加这个，评论弹窗会移动到软键盘上面
+                        .enableDrag(false)
                         .asCustom(new PagerBottomPopup(getContext()))
                         .showPopup();
                 break;
@@ -104,6 +108,17 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                         .showPopup();
 //                PagerBottomSheetDiloag diloag=new PagerBottomSheetDiloag(getContext());
 //                diloag.show();
+                break;
+            case R.id.reuseDialog: //自定义的底部弹窗
+                if (pagerBottomPopup == null) {
+                    pagerBottomPopup = new PagerBottomPopup(getContext());
+                }
+                new Popup.Builder(getContext())
+                        .enableDrag(false)
+//                        .moveUpToKeyboard(false) //如果不加这个，评论弹窗会移动到软键盘上面
+                        .asCustom(pagerBottomPopup)
+                        .showPopup();
+
                 break;
             case R.id.tv1:
                 new Popup.Builder(getContext())

@@ -20,4 +20,9 @@ public class CustomFullScreenPopup extends FullScreenPopupView {
     protected int getImplLayoutId() {
         return R.layout.custom_fullscreen_popup;
     }
+
+    @Override
+    public int getAnimationDuration() {
+        return 900;
+    }
 }

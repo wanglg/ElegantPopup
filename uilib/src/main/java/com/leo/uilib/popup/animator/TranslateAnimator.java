@@ -77,6 +77,8 @@ public class TranslateAnimator extends PopupAnimator {
             case TranslateFromBottom:
                 startTranslationY += targetView.getMeasuredHeight() - oldHeight;
                 break;
+            default:
+                break;
         }
 
         targetView.animate().translationX(startTranslationX).translationY(startTranslationY)

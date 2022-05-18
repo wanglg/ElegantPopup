@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 
 import com.leo.uilib.popup.impl.AttachPopupView;
-import com.leo.uilib.popup.impl.BasePopupView;
 import com.uq.xpopupdemo.R;
 
 
@@ -34,8 +33,4 @@ public class CustomAttachPopup2 extends AttachPopupView {
         return getResources().getDrawable(R.drawable.shadow_bg);
     }
 
-    @Override
-    public BasePopupView showPopup() {
-        return super.showPopup();
-    }
 }
