@@ -2,13 +2,12 @@ package com.leo.uilib.popup.impl.dialog;
 
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.leo.uilib.popup.R;
 import com.leo.uilib.popup.util.PopupUtils;
-
-import org.json.JSONObject;
 
 /**
  * @Author: wangliugeng
@@ -23,7 +22,7 @@ public abstract class FullScreenPopupDialog extends BasePopupDialog {
 
 
     @Override
-    public void initData(JSONObject jsonObject) {
+    public void initData(Bundle jsonObject) {
 
     }
 

@@ -1,5 +1,6 @@
 package com.leo.uilib.popup.util.navbar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.net.Uri;
@@ -106,6 +107,7 @@ public final class NavigationBarObserver extends ContentObserver {
     }
 
     private static class NavigationBarObserverInstance {
+        @SuppressLint("StaticFieldLeak")
         private static final NavigationBarObserver INSTANCE = new NavigationBarObserver();
     }
 

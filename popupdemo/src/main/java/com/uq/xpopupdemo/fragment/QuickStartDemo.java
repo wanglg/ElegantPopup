@@ -1,5 +1,6 @@
 package com.uq.xpopupdemo.fragment;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 
@@ -55,6 +56,8 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
         switch (v.getId()) {
             case R.id.btnShowConfirm: //带确认和取消按钮的弹窗
                 new Popup.Builder(getContext())
+                        .isViewMode(false)
+                        .shadowBgColor(Color.parseColor("#33000000"))
                         .asConfirm(
                                 "我是标题",
                                 "我是内容。",
@@ -90,6 +93,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                 new Popup.Builder(getContext())
 //                        .moveUpToKeyboard(false) //如果不加这个，评论弹窗会移动到软键盘上面
                         .enableDrag(false)
+//                        .shadowBgColor(Color.parseColor("#33000000"))
                         .asCustom(new PagerBottomPopup(getContext()))
                         .showPopup();
                 break;
@@ -114,8 +118,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                     pagerBottomPopup = new PagerBottomPopup(getContext());
                 }
                 new Popup.Builder(getContext())
-                        .enableDrag(false)
-//                        .moveUpToKeyboard(false) //如果不加这个，评论弹窗会移动到软键盘上面
+                        .enableDrag(true)
                         .asCustom(pagerBottomPopup)
                         .showPopup();
 
@@ -123,7 +126,8 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
             case R.id.tv1:
                 new Popup.Builder(getContext())
                         .atView(v)
-                        .popupType(PopupType.AttachView)
+//                        .popupType(PopupType.AttachView)
+                        .interceptTouchEvent(false)
                         .popupPosition(PopupPosition.Top)
                         .hasShadowBg(false) // 去掉半透明背景
                         .asCustom(new CustomAttachPopup2(getContext()))
@@ -141,6 +145,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                 new Popup.Builder(getContext())
                         .popupPosition(PopupPosition.Right)//右边
                         .hasStatusBarShadow(true) //启用状态栏阴影
+                        .hasShadowBg(true)
                         .asCustom(drawerPopupView)
                         .showPopup();
                 break;
@@ -161,6 +166,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                     new Popup.Builder(getContext())
                             .dismissOnTouchOutside(false)
                             .dismissOnBackPressed(false)
+                            .isViewMode(false)
                             .launchModel(LaunchModel.DROP)
                             .setListener(new SimplePopupListener() {
                                 @Override
@@ -178,8 +184,8 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                                     Log.e("tag", "onDismiss");
                                 }
                             }).asConfirm("我是标题", "床前明月光，疑是地上霜；举头望明月，低头思故乡。",
-                            "取消", "确定"
-                            , null, false)
+                                    "取消", "确定"
+                                    , null, false)
                             .showPopup();
                 }
                 break;
@@ -188,6 +194,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                     new Popup.Builder(getContext())
                             .dismissOnTouchOutside(false)
                             .dismissOnBackPressed(false)
+                            .isViewMode(false)
                             .launchModel(LaunchModel.LATEST)
                             .setListener(new SimplePopupListener() {
                                 @Override
@@ -205,8 +212,8 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                                     Log.e("tag", "onDismiss");
                                 }
                             }).asConfirm("我是标题", "床前明月光，疑是地上霜；举头望明月，低头思故乡。",
-                            "取消", "确定"
-                            , null, false)
+                                    "取消", "确定"
+                                    , null, false)
                             .showPopup();
                 }
                 break;
@@ -231,8 +238,8 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                                     Log.e("tag", "onDismiss");
                                 }
                             }).asConfirm("BUFFER" + i, "床前明月光，疑是地上霜；举头望明月，低头思故乡。",
-                            "取消", "确定"
-                            , null, false)
+                                    "取消", "确定"
+                                    , null, false)
                             .showPopup();
                 }
                 break;

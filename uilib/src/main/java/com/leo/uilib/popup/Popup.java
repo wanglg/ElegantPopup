@@ -2,8 +2,7 @@ package com.leo.uilib.popup;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PointF;
-import android.view.MotionEvent;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -32,6 +31,7 @@ public class Popup {
     private static int animationDuration = 360;
     public static int statusBarShadowColor = Color.parseColor("#55000000");
     private static int shadowBgColor = Color.parseColor("#9F000000");
+    private static int statusBarBgColor = Color.parseColor("#55000000");
 
     public static void setShadowBgColor(int color) {
         shadowBgColor = color;
@@ -41,10 +41,14 @@ public class Popup {
         return shadowBgColor;
     }
 
+    public static int getStatusBarBgColor() {
+        return statusBarBgColor;
+    }
+
     /**
      * 全局确认提醒弹框布局
      */
-    public static int confirmLayoutId = R.layout._xpopup_center_impl_confirm;
+    public static int confirmLayoutId = R.layout.elegant_popup_center_impl_confirm;
 
     /**
      * 设置主色调
@@ -137,33 +141,19 @@ public class Popup {
             return this;
         }
 
-        public Builder decorView(ViewGroup decorView) {
-            this.popupInfo.decorView = decorView;
+        /**
+         * popup弹框的锚点，即根布局，不设置的话默认是decorView
+         *
+         * @param anchorView
+         * @return
+         */
+        public Builder anchorView(ViewGroup anchorView) {
+            this.popupInfo.anchorView = anchorView;
             return this;
         }
 
         public Builder setPriority(long priority) {
             this.popupInfo.priority = priority;
-            return this;
-        }
-
-        /**
-         * 设置弹窗监视的View
-         *
-         * @param watchView
-         * @return
-         */
-        public Builder watchView(View watchView) {
-            this.popupInfo.watchView = watchView;
-            this.popupInfo.watchView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (popupInfo.touchPoint == null || event.getAction() == MotionEvent.ACTION_DOWN) {
-                        popupInfo.touchPoint = new PointF(event.getRawX(), event.getRawY());
-                    }
-                    return false;
-                }
-            });
             return this;
         }
 
@@ -180,6 +170,11 @@ public class Popup {
 
         public Builder observeSoftKeyboard(boolean observe) {
             this.popupInfo.observeSoftKeyboard = observe;
+            return this;
+        }
+
+        public Builder setExtObject(Bundle extObject) {
+            this.popupInfo.extObject = extObject;
             return this;
         }
 
@@ -256,6 +251,17 @@ public class Popup {
         }
 
         /**
+         * 是否拦截返回触摸返回事件，默认拦截
+         *
+         * @param \true 拦截 \false otherwise
+         * @return
+         */
+        public Builder interceptTouchEvent(boolean intercept) {
+            this.popupInfo.interceptTouchEvent = intercept;
+            return this;
+        }
+
+        /**
          * 设置是否给StatusBar添加阴影，目前对Drawer弹窗生效。如果你的Drawer的背景是白色，建议设置为true，因为状态栏文字的颜色也往往
          * 是白色，会导致状态栏文字看不清；如果Drawer的背景色不是白色，则忽略即可
          *
@@ -327,6 +333,16 @@ public class Popup {
             return this;
         }
 
+        public Builder shadowBgColor(int shadowBgColor) {
+            this.popupInfo.shadowBgColor = shadowBgColor;
+            return this;
+        }
+
+        public Builder statusBarBgColor(int statusBarBgColor) {
+            this.popupInfo.statusBarBgColor = statusBarBgColor;
+            return this;
+        }
+
         /**
          * 是否让弹窗内的输入框自动获取焦点，默认是true。
          *
@@ -343,6 +359,10 @@ public class Popup {
             return this;
         }
 
+        public Builder isViewMode(boolean viewMode) {
+            this.popupInfo.isViewMode = viewMode;
+            return this;
+        }
 
         /****************************************** 便捷方法 ****************************************/
         /**

@@ -1,5 +1,7 @@
 package com.leo.uilib.popup.core;
 
+import android.os.Bundle;
+
 import org.json.JSONObject;
 
 /**
@@ -12,7 +14,7 @@ public interface IPopupWindow {
 
     int getLayoutId();
 
-    void initData(JSONObject jsonObject);
+    void initData(Bundle extData);
 
     void configViews();
 

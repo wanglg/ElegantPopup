@@ -27,7 +27,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 
@@ -59,7 +58,7 @@ public abstract class BottomSheetPopupDialog extends BasePopupDialog {
 
     @Override
     protected void initView(Context context) {
-        ViewGroup container = (ViewGroup) View.inflate(context, R.layout._xpopup_bottom_sheet_dialog, null);
+        ViewGroup container = (ViewGroup) View.inflate(context, R.layout.elegant_popup_bottom_sheet_dialog, null);
         mRootView = container.findViewById(R.id.bottom_sheet);
         mBehavior = new ElegantBottomSheetBehavior<>();
         mBehavior.setHideable(cancelable);

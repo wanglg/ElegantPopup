@@ -1,5 +1,7 @@
 package com.leo.uilib.popup.impl;
 
+import static com.leo.uilib.popup.enums.PopupAnimation.ScaleAlphaFromCenter;
+
 import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,8 +15,6 @@ import com.leo.uilib.popup.animator.PopupAnimator;
 import com.leo.uilib.popup.animator.ScrollScaleAnimator;
 import com.leo.uilib.popup.enums.PopupPosition;
 import com.leo.uilib.popup.util.PopupUtils;
-
-import static com.leo.uilib.popup.enums.PopupAnimation.ScaleAlphaFromCenter;
 
 
 public class PositionPopupView extends BasePopupView {
@@ -55,11 +55,11 @@ public class PositionPopupView extends BasePopupView {
 
     @Override
     protected PopupAnimator getPopupAnimator() {
-        return new ScrollScaleAnimator(getPopupContentView(), ScaleAlphaFromCenter);
+        return new ScrollScaleAnimator(getPopupContentView(), getAnimationDuration(), ScaleAlphaFromCenter);
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout._xpopup_position_popup_view;
+        return R.layout.elegant_popup_position_popup_view;
     }
 }

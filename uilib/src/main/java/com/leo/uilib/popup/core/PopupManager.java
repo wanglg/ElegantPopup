@@ -21,7 +21,6 @@ import java.util.PriorityQueue;
  * @Desciption:
  */
 public class PopupManager {
-    private static PopupManager popupManager;
     private LinkedHashMap<String, List<SoftReference<IPopup>>> linkedHashMap;
     private LinkedHashMap<String, PriorityQueue<ComparatorSoftReference<IPopup>>> readyQueue;
 
@@ -30,15 +29,12 @@ public class PopupManager {
         readyQueue = new LinkedHashMap<>();
     }
 
+    private static final class PopupManagerHolder {
+        static final PopupManager popupManager = new PopupManager();
+    }
+
     public static PopupManager getPopupManager() {
-        if (popupManager == null) {
-            synchronized (PopupManager.class) {
-                if (popupManager == null) {
-                    popupManager = new PopupManager();
-                }
-            }
-        }
-        return popupManager;
+        return PopupManagerHolder.popupManager;
     }
 
     public void addPopup(Context context, IPopup iPopup) {

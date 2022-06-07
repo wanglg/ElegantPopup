@@ -13,8 +13,8 @@ public class TranslateAlphaAnimator extends PopupAnimator {
     private float startTranslationX, startTranslationY;
     private float defTranslationX, defTranslationY;
 
-    public TranslateAlphaAnimator(View target, PopupAnimation popupAnimation) {
-        super(target, popupAnimation);
+    public TranslateAlphaAnimator(View target, int animationDuration, PopupAnimation popupAnimation) {
+        super(target, animationDuration, popupAnimation);
     }
 
     @Override

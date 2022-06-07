@@ -34,7 +34,7 @@ public abstract class AttachPopupView extends BasePopupView {
 
     @Override
     public int getLayoutId() {
-        return R.layout._xpopup_attach_popup_view;
+        return R.layout.elegant_popup_attach_popup_view;
     }
 
     public boolean isShowUp;
@@ -216,16 +216,16 @@ public abstract class AttachPopupView extends BasePopupView {
         if (isShowUpToTarget()) {
             // 在上方展示
             if (isShowLeft) {
-                animator = new ScrollScaleAnimator(getPopupContentView(), PopupAnimation.ScrollAlphaFromLeftBottom);
+                animator = new ScrollScaleAnimator(getPopupContentView(), getAnimationDuration(), PopupAnimation.ScrollAlphaFromLeftBottom);
             } else {
-                animator = new ScrollScaleAnimator(getPopupContentView(), PopupAnimation.ScrollAlphaFromRightBottom);
+                animator = new ScrollScaleAnimator(getPopupContentView(), getAnimationDuration(), PopupAnimation.ScrollAlphaFromRightBottom);
             }
         } else {
             // 在下方展示
             if (isShowLeft) {
-                animator = new ScrollScaleAnimator(getPopupContentView(), PopupAnimation.ScrollAlphaFromLeftTop);
+                animator = new ScrollScaleAnimator(getPopupContentView(), getAnimationDuration(), PopupAnimation.ScrollAlphaFromLeftTop);
             } else {
-                animator = new ScrollScaleAnimator(getPopupContentView(), PopupAnimation.ScrollAlphaFromRightTop);
+                animator = new ScrollScaleAnimator(getPopupContentView(), getAnimationDuration(), PopupAnimation.ScrollAlphaFromRightTop);
             }
         }
         return animator;

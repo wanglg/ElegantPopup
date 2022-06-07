@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 
 import com.leo.uilib.popup.R;
 import com.leo.uilib.popup.animator.PopupAnimator;
+import com.leo.uilib.popup.animator.TranslateAnimator;
+import com.leo.uilib.popup.enums.PopupAnimation;
 import com.leo.uilib.popup.enums.PopupStatus;
 import com.leo.uilib.popup.util.KeyboardUtils;
 import com.leo.uilib.popup.util.PopupUtils;
@@ -24,7 +26,7 @@ public class BottomPopupView extends BasePopupView {
 
     @Override
     public int getLayoutId() {
-        return R.layout._xpopup_bottom_popup_view;
+        return R.layout.elegant_popup_bottom_popup_view;
     }
 
     @Override
@@ -35,12 +37,16 @@ public class BottomPopupView extends BasePopupView {
         bottomPopupContainer.addView(contentView);
         bottomPopupContainer.enableDrag(popupInfo.enableDrag);
         bottomPopupContainer.dismissOnTouchOutside(popupInfo.isDismissOnTouchOutside);
-        bottomPopupContainer.hasShadowBg(popupInfo.hasShadowBg);
+        if (popupInfo.enableDrag) {
+            popupInfo.popupAnimation = null;
+            getPopupImplView().setTranslationX(popupInfo.offsetX);
+            getPopupImplView().setTranslationY(popupInfo.offsetY);
+        } else {
+            getPopupContentView().setTranslationX(popupInfo.offsetX);
+            getPopupContentView().setTranslationY(popupInfo.offsetY);
+        }
 
-        getPopupImplView().setTranslationX(popupInfo.offsetX);
-        getPopupImplView().setTranslationY(popupInfo.offsetY);
-
-        PopupUtils.applyPopupSize((ViewGroup) contentView, getMaxWidth(), getMaxHeight());
+        PopupUtils.applyPopupSize(popupInfo.enableDrag ? (ViewGroup) contentView : (ViewGroup) getPopupContentView(), getMaxWidth(), getMaxHeight());
 
         bottomPopupContainer.setOnCloseListener(new SmartDragLayout.OnCloseListener() {
             @Override
@@ -50,30 +56,34 @@ public class BottomPopupView extends BasePopupView {
 
             @Override
             public void onOpen() {
-                BottomPopupView.super.doAfterShow();
+            }
+
+            @Override
+            public void onDrag(int y, float percent, boolean isScrollUp) {
+                if (popupInfo == null) {
+                    return;
+                }
+                if (popupInfo.hasShadowBg) {
+                    setBackgroundColor(shadowBgAnimator.calculateBgColor(percent));
+                }
             }
         });
 
         bottomPopupContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                if (popupInfo.isDismissOnTouchOutside) {
+                    dismiss();
+                }
             }
         });
     }
 
-
-    @Override
-    protected void doAfterShow() {
-        if (popupInfo.enableDrag) {
-            //do nothing self.
-        } else {
-            super.doAfterShow();
-        }
-    }
-
     @Override
     public void doShowAnimation() {
+        if (popupInfo == null) {
+            return;
+        }
         if (popupInfo.enableDrag) {
             bottomPopupContainer.open();
         } else {
@@ -100,10 +110,18 @@ public class BottomPopupView extends BasePopupView {
         return popupInfo.enableDrag ? 0 : super.getAnimationDuration();
     }
 
+    private TranslateAnimator translateAnimator;
+
     @Override
     protected PopupAnimator getPopupAnimator() {
-        // 移除默认的动画器
-        return popupInfo.enableDrag ? null : super.getPopupAnimator();
+        if (popupInfo == null) {
+            return null;
+        }
+        if (translateAnimator == null) {
+            translateAnimator = new TranslateAnimator(getPopupContentView(), getAnimationDuration(),
+                    PopupAnimation.TranslateFromBottom);
+        }
+        return popupInfo.enableDrag ? null : translateAnimator;
     }
 
     @Override
@@ -145,4 +163,13 @@ public class BottomPopupView extends BasePopupView {
         return getPopupImplView();
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        if (popupInfo != null && !popupInfo.enableDrag && translateAnimator != null) {
+            getPopupContentView().setTranslationX(translateAnimator.startTranslationX);
+            getPopupContentView().setTranslationY(translateAnimator.startTranslationY);
+            translateAnimator.hasInit = true;
+        }
+        super.onDetachedFromWindow();
+    }
 }

@@ -17,7 +17,7 @@ public class LoadingPopupView extends CenterPopupView {
 
     @Override
     protected int getImplLayoutId() {
-        return bindLayoutId != 0 ? bindLayoutId : R.layout._xpopup_center_impl_loading;
+        return bindLayoutId != 0 ? bindLayoutId : R.layout.elegant_popup_center_impl_loading;
     }
 
     /**

@@ -25,8 +25,8 @@ public class ScrollScaleAnimator extends PopupAnimator {
 
     public boolean isOnlyScaleX = false;
 
-    public ScrollScaleAnimator(View target, PopupAnimation popupAnimation) {
-        super(target, popupAnimation);
+    public ScrollScaleAnimator(View target, int animationDuration, PopupAnimation popupAnimation) {
+        super(target, animationDuration, popupAnimation);
     }
 
     @Override

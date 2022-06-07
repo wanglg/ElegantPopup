@@ -34,6 +34,6 @@ public class CustomToplPopup extends PositionPopupView {
 
     @Override
     protected PopupAnimator getPopupAnimator() {
-        return new TranslateAnimator(getPopupContentView(), PopupAnimation.TranslateFromRight);
+        return new TranslateAnimator(getPopupContentView(), getAnimationDuration(), PopupAnimation.TranslateFromRight);
     }
 }

@@ -3,6 +3,7 @@ package com.leo.uilib.popup.impl;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -11,12 +12,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
 
 import com.leo.uilib.popup.Popup;
 import com.leo.uilib.popup.animator.EmptyAnimator;
@@ -35,18 +39,17 @@ import com.leo.uilib.popup.enums.LaunchModel;
 import com.leo.uilib.popup.enums.PopupAnimation;
 import com.leo.uilib.popup.enums.PopupStatus;
 import com.leo.uilib.popup.enums.PopupType;
+import com.leo.uilib.popup.impl.dialog.ElegantHostDialog;
 import com.leo.uilib.popup.util.KeyboardUtils;
 import com.leo.uilib.popup.util.PopupUtils;
 import com.leo.uilib.popup.util.navbar.NavigationBarObserver;
 import com.leo.uilib.popup.util.navbar.OnNavigationBarListener;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 
 public abstract class BasePopupView extends FrameLayout implements OnNavigationBarListener,
-        IBack, IPopup, IPopupWindow {
+        IBack, IPopup, IPopupWindow, LifecycleObserver {
     public PopupInfo popupInfo;
     protected PopupAnimator popupContentAnimator;
     protected ShadowBgAnimator shadowBgAnimator;
@@ -59,7 +62,6 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
     public BasePopupView(@NonNull Context context) {
         super(context);
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        shadowBgAnimator = new ShadowBgAnimator(this);
         //  添加Popup窗体内容View
         View contentView = LayoutInflater.from(context).inflate(getLayoutId(), this, false);
         // 事先隐藏，等测量完毕恢复，避免View影子跳动现象。
@@ -83,8 +85,6 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
             return;
         }
         popupStatus = PopupStatus.Showing;
-        NavigationBarObserver.getInstance().register(getContext());
-        NavigationBarObserver.getInstance().addOnNavigationBarListener(this);
 
         //1. 初始化Popup
         if (!isCreated) {
@@ -110,7 +110,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
 
         Runnable runnable = () -> {
             // 如果有导航栏，则不能覆盖导航栏，判断各种屏幕方向
-            applySize(false);
+//            applySize(false);
             getPopupContentView().setAlpha(1f);
 
             //2. 收集动画执行器
@@ -152,7 +152,9 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
                     popupContentAnimator = getPopupAnimator();
                 }
             }
-
+            if (shadowBgAnimator == null) {
+                shadowBgAnimator = new ShadowBgAnimator(this, getAnimationDuration(), getShadowBgColor());
+            }
             //3. 初始化动画执行器
             shadowBgAnimator.initAnimator();
             if (popupContentAnimator != null) {
@@ -163,11 +165,14 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
 
     @Override
     public void onNavigationBarChange(boolean show) {
-        if (!show) {
-            applyFull();
-        } else {
-            applySize(true);
-        }
+//        if (!show) {
+////            applyFull();
+//            setSize();
+//        } else {
+////            applySize(true);
+//            setSize();
+//        }
+        setSize();
     }
 
     @Override
@@ -176,7 +181,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
     }
 
     @Override
-    public void initData(JSONObject jsonObject) {
+    public void initData(Bundle jsonObject) {
 
     }
 
@@ -189,6 +194,11 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         setLayoutParams(params);
     }
 
+    /**
+     * 展示前判断是不是要拦截
+     *
+     * @return true拦截 false othrewise
+     */
     protected boolean beforeShow() {
         boolean interceptShow = false;
         if (popupInfo != null) {
@@ -220,45 +230,57 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         return interceptShow;
     }
 
-    protected void applySize(boolean isShowNavBar) {
-        MarginLayoutParams params = (MarginLayoutParams) getLayoutParams();
-        int rotation = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-        boolean isNavBarShown = isShowNavBar || PopupUtils.isNavBarVisible(getContext());
-        if (rotation == 0) {
-            params.leftMargin = 0;
-            params.rightMargin = 0;
-            params.bottomMargin = isNavBarShown ? PopupUtils.getNavBarHeight() : 0;
-        } else if (rotation == 1) {
-            params.bottomMargin = 0;
-            params.rightMargin = isNavBarShown ? PopupUtils.getNavBarHeight() : 0;
-            params.leftMargin = 0;
-        } else if (rotation == 3) {
-            params.bottomMargin = 0;
-            params.leftMargin = 0;
-            params.rightMargin = isNavBarShown ? PopupUtils.getNavBarHeight() : 0;
-        }
-        setLayoutParams(params);
-    }
+//    protected void applySize(boolean isShowNavBar) {
+//        MarginLayoutParams params = (MarginLayoutParams) getLayoutParams();
+//        int rotation = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+//        boolean isNavBarShown = isShowNavBar || PopupUtils.isNavBarVisible(getContext());
+//        if (rotation == 0) {
+//            params.leftMargin = 0;
+//            params.rightMargin = 0;
+//            params.bottomMargin = isNavBarShown ? PopupUtils.getNavBarHeight() : 0;
+//        } else if (rotation == 1) {
+//            params.bottomMargin = 0;
+//            params.rightMargin = isNavBarShown ? PopupUtils.getNavBarHeight() : 0;
+//            params.leftMargin = 0;
+//        } else if (rotation == 3) {
+//            params.bottomMargin = 0;
+//            params.leftMargin = 0;
+//            params.rightMargin = isNavBarShown ? PopupUtils.getNavBarHeight() : 0;
+//        }
+//        setLayoutParams(params);
+//    }
 
     @Override
     public BasePopupView showPopup() {
-        if (getParent() != null) {
+        if (popupInfo.isViewMode && getParent() != null) {
             return this;
         }
+        if (popupStatus == PopupStatus.Showing || popupStatus == PopupStatus.Dismissing) {
+            return this;
+        }
+        if (!popupInfo.isViewMode) {
+            if (hostDialog != null && hostDialog.isShowing()) {
+                return this;
+            }
+        }
         final Activity activity = (Activity) getContext();
-        if (popupInfo.decorView == null) {
-            popupInfo.decorView = (ViewGroup) activity.getWindow().getDecorView();
+        if (popupInfo.anchorView == null) {
+            popupInfo.anchorView = (ViewGroup) activity.getWindow().getDecorView();
         }
 
         Runnable runnable = () -> {
-            if (getParent() != null) {
+            if (popupInfo.isViewMode && getParent() != null) {
                 ((ViewGroup) getParent()).removeView(BasePopupView.this);
             }
             if (beforeShow()) {
                 return;
             }
+            if (popupInfo.popupListener != null) {
+                popupInfo.popupListener.beforeShow();
+            }
+            attachToHost();
             if (popupInfo.observeSoftKeyboard) {
-                KeyboardUtils.registerSoftInputChangedListener(this, height -> {
+                KeyboardUtils.registerSoftInputChangedListener(getHostWindow(), this, height -> {
                     if (popupInfo.popupType == PopupType.AttachView) {
                         return;
                     }
@@ -272,14 +294,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
                     }
                 });
             }
-
-            if (popupInfo.popupListener != null) {
-                popupInfo.popupListener.beforeShow();
-            }
-            popupInfo.decorView.addView(BasePopupView.this, new LayoutParams(LayoutParams.MATCH_PARENT,
-                    LayoutParams.MATCH_PARENT));
             PopupManager.getPopupManager().addPopup(getContext(), this);
-            //2. do init，game start.
 
             init();
         };
@@ -288,10 +303,110 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
             runnable.run();
         } else {
             // 1. add PopupView to its decorView after measured.
-            popupInfo.decorView.post(runnable);
+            popupInfo.anchorView.post(runnable);
         }
 
         return this;
+    }
+
+    ElegantHostDialog hostDialog;
+
+    private void attachToHost() {
+        setSize();
+        if (popupInfo.isViewMode) {
+            popupInfo.anchorView.addView(BasePopupView.this);
+        } else {
+            if (hostDialog == null) {
+                hostDialog = new ElegantHostDialog(getContext()).setContent(this);
+            }
+            if (!hostDialog.isShowing()) {
+                hostDialog.show();
+            }
+        }
+    }
+
+    private void setSize() {
+        int navHeight = 0;
+        View decorView = PopupUtils.context2Activity(this).getWindow().getDecorView();
+        if (decorView == popupInfo.anchorView) {
+            //设置自己的大小，和Activity的contentView保持一致
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                View navBarView = decorView.findViewById(android.R.id.navigationBarBackground);
+                if (navBarView != null) {
+                    navHeight = PopupUtils.isLandscape(getContext()) && !PopupUtils.isTablet() ?
+                            navBarView.getMeasuredWidth() : navBarView.getMeasuredHeight();
+                }
+            } else {
+                navHeight = PopupUtils.isNavBarVisible(PopupUtils.context2Activity(this).getWindow()) ?
+                        PopupUtils.getNavBarHeight() : 0;
+            }
+            View activityContent = getActivityContentView();
+            if (getLayoutParams() == null) {
+                ViewGroup.MarginLayoutParams params = new MarginLayoutParams(activityContent.getMeasuredWidth(),
+                        decorView.getMeasuredHeight() -
+                                (PopupUtils.isLandscape(getContext()) && !PopupUtils.isTablet() ? 0 : navHeight));
+                if (PopupUtils.isLandscape(getContext())) {
+                    params.leftMargin = getActivityContentLeft();
+                }
+                setLayoutParams(params);
+            } else {
+                ViewGroup.LayoutParams vp = getLayoutParams();
+                vp.height = decorView.getMeasuredHeight() -
+                        (PopupUtils.isLandscape(getContext()) && !PopupUtils.isTablet() ? 0 : navHeight);
+                vp.width = activityContent.getMeasuredWidth();
+                setLayoutParams(vp);
+            }
+
+        } else {
+            if (getLayoutParams() == null) {
+                ViewGroup.MarginLayoutParams params = new MarginLayoutParams(popupInfo.anchorView.getMeasuredWidth(),
+                        popupInfo.anchorView.getMeasuredHeight());
+                setLayoutParams(params);
+            } else {
+                ViewGroup.LayoutParams vp = getLayoutParams();
+                vp.height = popupInfo.anchorView.getMeasuredHeight();
+                vp.width = popupInfo.anchorView.getMeasuredWidth();
+                setLayoutParams(vp);
+            }
+
+        }
+
+    }
+
+    public View getActivityContentView() {
+        return PopupUtils.context2Activity(this).getWindow().getDecorView().findViewById(android.R.id.content);
+    }
+
+    protected int getActivityContentLeft() {
+        if (!PopupUtils.isLandscape(getContext())) {
+            return 0;
+        }
+        //以Activity的content的left为准
+        View decorView = PopupUtils.context2Activity(this).getWindow().getDecorView().findViewById(android.R.id.content);
+        int[] loc = new int[2];
+        decorView.getLocationInWindow(loc);
+        return loc[0];
+    }
+
+    protected void detachFromHost() {
+        if (popupInfo.isViewMode) {
+            popupInfo.anchorView.removeView(this);
+        } else {
+            try {
+                if (hostDialog != null) {
+                    hostDialog.dismiss();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Window getHostWindow() {
+        if (popupInfo != null && popupInfo.isViewMode && getContext() instanceof Activity) {
+            return ((Activity) getContext()).getWindow();
+        }
+        return hostDialog == null ? null : hostDialog.getWindow();
     }
 
     protected void doAfterShow() {
@@ -319,6 +434,9 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
     private ShowSoftInputTask showSoftInputTask;
 
     public void focusAndProcessBackPress() {
+        if (!popupInfo.isViewMode) {
+            return;
+        }
         if (popupInfo.isRequestFocus) {
             setFocusableInTouchMode(true);
             requestFocus();
@@ -394,13 +512,18 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
 
     @Override
     public boolean onBack() {
-        if (popupInfo.popupType != null && popupInfo.popupType == PopupType.AttachView) {
+        if (popupInfo.popupType != null && !popupInfo.interceptTouchEvent) {
             return false;
         }
         if (popupInfo.isDismissOnBackPressed) {
             dismissOrHideSoftInput();
         }
         return true;
+    }
+
+    @OnLifecycleEvent(value = Lifecycle.Event.ON_DESTROY)
+    public void onDestroy() {
+        detachFromHost();
     }
 
     /**
@@ -416,20 +539,19 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
             case ScaleAlphaFromRightTop:
             case ScaleAlphaFromLeftBottom:
             case ScaleAlphaFromRightBottom:
-                return new ScaleAlphaAnimator(getPopupContentView(), popupInfo.popupAnimation);
+                return new ScaleAlphaAnimator(getPopupContentView(), getAnimationDuration(), popupInfo.popupAnimation);
 
             case TranslateAlphaFromLeft:
             case TranslateAlphaFromTop:
             case TranslateAlphaFromRight:
             case TranslateAlphaFromBottom:
-                return new TranslateAlphaAnimator(getPopupContentView(), popupInfo.popupAnimation);
+                return new TranslateAlphaAnimator(getPopupContentView(), getAnimationDuration(), popupInfo.popupAnimation);
 
             case TranslateFromLeft:
             case TranslateFromTop:
             case TranslateFromRight:
             case TranslateFromBottom:
-                return new TranslateAnimator(getPopupContentView(), popupInfo.popupAnimation);
-
+                return new TranslateAnimator(getPopupContentView(), getAnimationDuration(), popupInfo.popupAnimation);
             case ScrollAlphaFromLeft:
             case ScrollAlphaFromLeftTop:
             case ScrollAlphaFromTop:
@@ -438,9 +560,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
             case ScrollAlphaFromRightBottom:
             case ScrollAlphaFromBottom:
             case ScrollAlphaFromLeftBottom:
-                return new ScrollScaleAnimator(getPopupContentView(), popupInfo.popupAnimation);
-            case NoAnimation:
-                return new EmptyAnimator();
+                return new ScrollScaleAnimator(getPopupContentView(), getAnimationDuration(), popupInfo.popupAnimation);
             default:
                 return new EmptyAnimator();
         }
@@ -490,7 +610,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
      * 背景动画由父类实现，Content由子类实现
      */
     protected void doDismissAnimation() {
-        if (popupInfo.hasShadowBg) {
+        if (popupInfo.hasShadowBg && shadowBgAnimator != null) {
             shadowBgAnimator.animateDismiss();
         }
         if (popupContentAnimator != null) {
@@ -514,6 +634,10 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
 
     public int getAnimationDuration() {
         return popupInfo.popupAnimation == PopupAnimation.NoAnimation ? 10 : Popup.getAnimationDuration();
+    }
+
+    public int getShadowBgColor() {
+        return popupInfo != null && popupInfo.shadowBgColor != 0 ? popupInfo.shadowBgColor : Popup.getShadowBgColor();
     }
 
     /**
@@ -594,7 +718,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         postDelayed(doAfterDismissTask, getAnimationDuration());
     }
 
-    private Runnable doAfterDismissTask = new Runnable() {
+    private final Runnable doAfterDismissTask = new Runnable() {
         @Override
         public void run() {
             onDismiss();
@@ -610,9 +734,8 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
                 dismissRunnable = null;
             }
             popupStatus = PopupStatus.Dismiss;
-            NavigationBarObserver.getInstance().removeOnNavigationBarListener(BasePopupView.this);
 
-            if (popupInfo != null && popupInfo.isRequestFocus) {
+            if (popupInfo != null && popupInfo.isRequestFocus && popupInfo.isViewMode) {
                 IPopup popup = PopupManager.getPopupManager().getTopPopup(getContext());
                 if (popup instanceof BasePopupView) {
                     ((BasePopupView) popup).focusAndProcessBackPress();
@@ -627,12 +750,8 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
             }
 
             // 移除弹窗，GameOver
-            if (popupInfo != null && popupInfo.decorView != null) {
-                popupInfo.decorView.removeView(BasePopupView.this);
-                if (popupInfo.observeSoftKeyboard) {
-                    KeyboardUtils.removeLayoutChangeListener(BasePopupView.this);
-                }
-            }
+            detachFromHost();
+
             //展示缓存的弹框
             if (getContext() instanceof Activity) {
                 Activity activity = (Activity) getContext();
@@ -687,26 +806,36 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        NavigationBarObserver.getInstance().register(getContext());
+        NavigationBarObserver.getInstance().addOnNavigationBarListener(this);
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         removeCallbacks(doAfterShowTask);
         removeCallbacks(doAfterDismissTask);
-        if (popupInfo.observeSoftKeyboard) {
-            KeyboardUtils.removeLayoutChangeListener(BasePopupView.this);
-        }
         if (showSoftInputTask != null) {
             removeCallbacks(showSoftInputTask);
         }
         popupStatus = PopupStatus.Dismiss;
         showSoftInputTask = null;
         hasMoveUp = false;
+        NavigationBarObserver.getInstance().removeOnNavigationBarListener(BasePopupView.this);
+        if (popupInfo != null) {
+            if (popupInfo.observeSoftKeyboard) {
+                KeyboardUtils.removeLayoutChangeListener(getHostWindow(), BasePopupView.this);
+            }
+        }
     }
 
     private float x, y;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (popupInfo.popupType != null && popupInfo.popupType == PopupType.AttachView) {
+        if (popupInfo != null && !popupInfo.interceptTouchEvent) {
             return super.onTouchEvent(event);
         }
         // 如果自己接触到了点击，并且不在PopupContentView范围内点击，则进行判断是否是点击事件,如果是，则dismiss
@@ -745,6 +874,9 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         this.popupInfo = popupInfo;
     }
 
+    public int getStatusBarBgColor() {
+        return popupInfo != null && popupInfo.statusBarBgColor != 0 ? popupInfo.statusBarBgColor : Popup.getStatusBarBgColor();
+    }
 
     @Override
     public boolean equals(Object obj) {

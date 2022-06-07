@@ -23,6 +23,6 @@ public class CustomFullScreenPopup extends FullScreenPopupView {
 
     @Override
     public int getAnimationDuration() {
-        return 900;
+        return 500;
     }
 }

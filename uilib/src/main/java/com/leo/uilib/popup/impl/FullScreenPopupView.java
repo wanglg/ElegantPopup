@@ -4,17 +4,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.view.Gravity;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
 import com.leo.uilib.popup.Popup;
+import com.leo.uilib.popup.animator.PopupAnimator;
 import com.leo.uilib.popup.animator.TranslateAnimator;
 import com.leo.uilib.popup.enums.PopupAnimation;
-import com.leo.uilib.popup.animator.PopupAnimator;
 import com.leo.uilib.popup.util.PopupUtils;
 
 
@@ -34,32 +30,32 @@ public class FullScreenPopupView extends CenterPopupView {
         popupInfo.hasShadowBg = false;
     }
 
-    @Override
-    public void onNavigationBarChange(boolean show) {
-        if (!show) {
-            applyFull();
-            getPopupContentView().setPadding(0, 0, 0, 0);
-        } else {
-            applySize(true);
-        }
-    }
+//    @Override
+//    public void onNavigationBarChange(boolean show) {
+//        if (!show) {
+//            applyFull();
+//            getPopupContentView().setPadding(0, 0, 0, 0);
+//        } else {
+//            applySize(true);
+//        }
+//    }
 
-    @Override
-    protected void applySize(boolean isShowNavBar) {
-        int rotation = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-        View contentView = getPopupContentView();
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) contentView.getLayoutParams();
-        params.gravity = Gravity.TOP;
-        contentView.setLayoutParams(params);
-
-        int actualNabBarHeight = isShowNavBar || PopupUtils.isNavBarVisible(getContext()) ? PopupUtils.getNavBarHeight() : 0;
-        if (rotation == 0) {
-            contentView.setPadding(contentView.getPaddingLeft(), contentView.getPaddingTop(), contentView.getPaddingRight(),
-                    actualNabBarHeight);
-        } else if (rotation == 1 || rotation == 3) {
-            contentView.setPadding(contentView.getPaddingLeft(), contentView.getPaddingTop(), contentView.getPaddingRight(), 0);
-        }
-    }
+//    @Override
+//    protected void applySize(boolean isShowNavBar) {
+//        int rotation = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+//        View contentView = getPopupContentView();
+//        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) contentView.getLayoutParams();
+//        params.gravity = Gravity.TOP;
+//        contentView.setLayoutParams(params);
+//
+//        int actualNabBarHeight = isShowNavBar || PopupUtils.isNavBarVisible(getContext()) ? PopupUtils.getNavBarHeight() : 0;
+//        if (rotation == 0) {
+//            contentView.setPadding(contentView.getPaddingLeft(), contentView.getPaddingTop(), contentView.getPaddingRight(),
+//                    actualNabBarHeight);
+//        } else if (rotation == 1 || rotation == 3) {
+//            contentView.setPadding(contentView.getPaddingLeft(), contentView.getPaddingTop(), contentView.getPaddingRight(), 0);
+//        }
+//    }
 
     Paint paint = new Paint();
     Rect shadowRect;
@@ -82,6 +78,6 @@ public class FullScreenPopupView extends CenterPopupView {
 
     @Override
     protected PopupAnimator getPopupAnimator() {
-        return new TranslateAnimator(getPopupContentView(), PopupAnimation.TranslateFromBottom);
+        return new TranslateAnimator(getPopupContentView(),getAnimationDuration(), PopupAnimation.TranslateFromBottom);
     }
 }

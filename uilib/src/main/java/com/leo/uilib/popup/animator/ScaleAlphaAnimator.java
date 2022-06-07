@@ -14,8 +14,8 @@ import com.leo.uilib.popup.enums.PopupAnimation;
  * Create by dance, at 2018/12/9
  */
 public class ScaleAlphaAnimator extends PopupAnimator {
-    public ScaleAlphaAnimator(View target, PopupAnimation popupAnimation) {
-        super(target, popupAnimation);
+    public ScaleAlphaAnimator(View target, int animationDuration, PopupAnimation popupAnimation) {
+        super(target, animationDuration, popupAnimation);
     }
 
     @Override
@@ -25,12 +25,7 @@ public class ScaleAlphaAnimator extends PopupAnimator {
         targetView.setAlpha(0);
 
         // 设置动画参考点
-        targetView.post(new Runnable() {
-            @Override
-            public void run() {
-                applyPivot();
-            }
-        });
+        targetView.post(this::applyPivot);
     }
 
     /**
@@ -57,6 +52,8 @@ public class ScaleAlphaAnimator extends PopupAnimator {
             case ScaleAlphaFromRightBottom:
                 targetView.setPivotX(targetView.getMeasuredWidth());
                 targetView.setPivotY(targetView.getMeasuredHeight());
+                break;
+            default:
                 break;
         }
 

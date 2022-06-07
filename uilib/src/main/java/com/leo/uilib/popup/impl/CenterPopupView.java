@@ -27,7 +27,7 @@ public class CenterPopupView extends BasePopupView {
 
     @Override
     public int getLayoutId() {
-        return R.layout._xpopup_center_popup_view;
+        return R.layout.elegant_popup_center_popup_view;
     }
 
     @Override
@@ -66,6 +66,6 @@ public class CenterPopupView extends BasePopupView {
 
     @Override
     protected PopupAnimator getPopupAnimator() {
-        return new ScaleAlphaAnimator(getPopupContentView(), PopupAnimation.ScaleAlphaFromCenter);
+        return new ScaleAlphaAnimator(getPopupContentView(), getAnimationDuration(),PopupAnimation.ScaleAlphaFromCenter);
     }
 }

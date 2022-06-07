@@ -1,6 +1,7 @@
 package com.uq.xpopupdemo.custom;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class PagerBottomDiloag extends BottomSheetPopupDialog {
     }
 
     @Override
-    public void initData(JSONObject jsonObject) {
+    public void initData(Bundle jsonObject) {
 
     }
 

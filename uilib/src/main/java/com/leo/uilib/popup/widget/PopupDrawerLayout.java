@@ -1,10 +1,6 @@
 package com.leo.uilib.popup.widget;
 
-import android.animation.ArgbEvaluator;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -18,10 +14,8 @@ import androidx.core.view.ViewCompat;
 import androidx.customview.widget.ViewDragHelper;
 import androidx.viewpager.widget.ViewPager;
 
-import com.leo.uilib.popup.Popup;
 import com.leo.uilib.popup.enums.LayoutStatus;
 import com.leo.uilib.popup.enums.PopupPosition;
-import com.leo.uilib.popup.animator.ShadowBgAnimator;
 import com.leo.uilib.popup.util.PopupUtils;
 
 
@@ -36,12 +30,8 @@ public class PopupDrawerLayout extends FrameLayout {
     ViewDragHelper dragHelper;
     View placeHolder, mChild;
     public PopupPosition position = PopupPosition.Left;
-    ShadowBgAnimator bgAnimator = new ShadowBgAnimator();
-    ArgbEvaluator argbEvaluator = new ArgbEvaluator();
-    int defaultColor = Color.TRANSPARENT;
-    public boolean isDrawStatusBarShadow = false;
     float fraction = 0f;
-    public boolean enableShadow = true;
+    public boolean enableDrag = true;
 
     public PopupDrawerLayout(Context context) {
         this(context, null);
@@ -79,7 +69,7 @@ public class PopupDrawerLayout extends FrameLayout {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        placeHolder.layout(0, 0, placeHolder.getMeasuredWidth(), placeHolder.getMeasuredHeight());
+        placeHolder.layout(0, 0, getMeasuredWidth(), getMeasuredHeight());
         if (!hasLayout) {
             if (position == PopupPosition.Left) {
                 mChild.layout(-mChild.getMeasuredWidth(), 0, 0, getMeasuredHeight());
@@ -88,34 +78,54 @@ public class PopupDrawerLayout extends FrameLayout {
             }
             hasLayout = true;
         } else {
-            mChild.layout(mChild.getLeft(), mChild.getTop(), mChild.getRight(), mChild.getBottom());
+            mChild.layout(mChild.getLeft(), mChild.getTop(), mChild.getRight(), mChild.getMeasuredHeight());
         }
     }
 
     boolean isIntercept = false;
     float x, y;
+    float downX, downY;
     boolean isToLeft, canChildScrollLeft;
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (!enableDrag) return super.onInterceptTouchEvent(ev);
+        if (dragHelper.continueSettling(true) || status == LayoutStatus.Close) return true;
         isToLeft = ev.getX() < x;
         x = ev.getX();
         y = ev.getY();
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                downX = ev.getX();
+                downY = ev.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float dx = Math.abs(x - downX);
+                float dy = Math.abs(y - downY);
+                if (dy > dx) {
+                    //垂直方向滑动
+                    return false;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                x = 0;
+                y = 0;
+                break;
+        }
 //        boolean canChildScrollRight = canScroll(this, ev.getX(), ev.getY(), -1);
         canChildScrollLeft = canScroll(this, ev.getX(), ev.getY(), 1);
-        if (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_CANCEL) {
-            x = 0;
-            y = 0;
-        }
+//        if (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_CANCEL) {
+//            x = 0;
+//            y = 0;
+//        }
         isIntercept = dragHelper.shouldInterceptTouchEvent(ev);
         if (isToLeft && !canChildScrollLeft) {
             return isIntercept;
         }
 
         boolean canChildScrollHorizontal = canScroll(this, ev.getX(), ev.getY());
-        if (!canChildScrollHorizontal) {
-            return isIntercept;
-        }
+        if (!canChildScrollHorizontal) return isIntercept;
 
         return super.onInterceptTouchEvent(ev);
     }
@@ -155,9 +165,8 @@ public class PopupDrawerLayout extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (dragHelper.continueSettling(true)) {
-            return true;
-        }
+        if (!enableDrag) return super.onTouchEvent(event);
+        if (dragHelper.continueSettling(true)) return true;
         dragHelper.processTouchEvent(event);
         return true;
     }
@@ -165,7 +174,7 @@ public class PopupDrawerLayout extends FrameLayout {
     ViewDragHelper.Callback callback = new ViewDragHelper.Callback() {
         @Override
         public boolean tryCaptureView(@NonNull View view, int i) {
-            return !dragHelper.continueSettling(true);
+            return !dragHelper.continueSettling(true) && status != LayoutStatus.Close;
         }
 
         @Override
@@ -175,9 +184,7 @@ public class PopupDrawerLayout extends FrameLayout {
 
         @Override
         public int clampViewPositionHorizontal(@NonNull View child, int left, int dx) {
-            if (child == placeHolder) {
-                return left;
-            }
+            if (child == placeHolder) return left;
             return fixLeft(left);
         }
 
@@ -188,13 +195,13 @@ public class PopupDrawerLayout extends FrameLayout {
                 placeHolder.layout(0, 0, placeHolder.getMeasuredWidth(), placeHolder.getMeasuredHeight());
                 int newLeft = fixLeft(mChild.getLeft() + dx);
                 mChild.layout(newLeft, mChild.getTop(), newLeft + mChild.getMeasuredWidth(), mChild.getBottom());
-                calcFraction(newLeft);
+                calcFraction(newLeft, dx);
             } else {
-                calcFraction(left);
+                calcFraction(left, dx);
             }
         }
 
-        private void calcFraction(int left) {
+        private void calcFraction(int left, int dx) {
             // fraction = (now - start) * 1f / (end - start)
             if (position == PopupPosition.Left) {
                 fraction = (left + mChild.getMeasuredWidth()) * 1f / mChild.getMeasuredWidth();
@@ -209,11 +216,8 @@ public class PopupDrawerLayout extends FrameLayout {
                     listener.onClose();
                 }
             }
-            if (enableShadow) {
-                setBackgroundColor(bgAnimator.calculateBgColor(fraction));
-            }
             if (listener != null) {
-                listener.onDismissing(fraction);
+                listener.onDrag(left, fraction, dx < 0);
                 if (fraction == 1f && status != LayoutStatus.Open) {
                     status = LayoutStatus.Open;
                     listener.onOpen();
@@ -225,7 +229,7 @@ public class PopupDrawerLayout extends FrameLayout {
         public void onViewReleased(@NonNull View releasedChild, float xvel, float yvel) {
             super.onViewReleased(releasedChild, xvel, yvel);
             if (releasedChild == placeHolder && xvel == 0) {
-                close();
+                if (isDismissOnTouchOutside) close();
                 return;
             }
             if (releasedChild == mChild && isToLeft && !canChildScrollLeft && xvel < -500) {
@@ -257,19 +261,12 @@ public class PopupDrawerLayout extends FrameLayout {
 
     private int fixLeft(int left) {
         if (position == PopupPosition.Left) {
-            if (left < -mChild.getMeasuredWidth()) {
-                left = -mChild.getMeasuredWidth();
-            }
-            if (left > 0) {
-                left = 0;
-            }
+            if (left < -mChild.getMeasuredWidth()) left = -mChild.getMeasuredWidth();
+            if (left > 0) left = 0;
         } else if (position == PopupPosition.Right) {
-            if (left < (getMeasuredWidth() - mChild.getMeasuredWidth())) {
+            if (left < (getMeasuredWidth() - mChild.getMeasuredWidth()))
                 left = (getMeasuredWidth() - mChild.getMeasuredWidth());
-            }
-            if (left > getMeasuredWidth()) {
-                left = getMeasuredWidth();
-            }
+            if (left > getMeasuredWidth()) left = getMeasuredWidth();
         }
         return left;
     }
@@ -277,33 +274,18 @@ public class PopupDrawerLayout extends FrameLayout {
     @Override
     public void computeScroll() {
         super.computeScroll();
-        if (dragHelper.continueSettling(false)) {
+        if (dragHelper.continueSettling(true)) {
             ViewCompat.postInvalidateOnAnimation(this);
-        }
-    }
-
-    Paint paint;
-    Rect shadowRect;
-
-    @Override
-    protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);
-        if (isDrawStatusBarShadow) {
-            if (paint == null) {
-                paint = new Paint();
-                shadowRect = new Rect(0, 0, getMeasuredHeight(), PopupUtils.getStatusBarHeight());
-            }
-            paint.setColor((Integer) argbEvaluator.evaluate(fraction, defaultColor, Popup.statusBarShadowColor));
-            canvas.drawRect(shadowRect, paint);
         }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        status = null;
-        fraction = 0f;
-        setTranslationY(ty);
+//        status = null;
+//        hasLayout = false;
+//        fraction = 0f;
+//        setTranslationY(ty);
     }
 
     /**
@@ -319,21 +301,16 @@ public class PopupDrawerLayout extends FrameLayout {
         });
     }
 
-    public boolean isCanClose = true;
+    public boolean isDismissOnTouchOutside = true;
 
     /**
      * 关闭Drawer
      */
     public void close() {
-        if (dragHelper.continueSettling(true)) {
-            return;
-        }
-        if (!isCanClose) {
-            return;
-        }
         post(new Runnable() {
             @Override
             public void run() {
+                dragHelper.abort();
                 dragHelper.smoothSlideViewTo(mChild, position == PopupPosition.Left ? -mChild.getMeasuredWidth() : getMeasuredWidth(), 0);
                 ViewCompat.postInvalidateOnAnimation(PopupDrawerLayout.this);
             }
@@ -356,6 +333,6 @@ public class PopupDrawerLayout extends FrameLayout {
          *
          * @param fraction 关闭的百分比
          */
-        void onDismissing(float fraction);
+        void onDrag(int x, float fraction, boolean isToLeft);
     }
 }

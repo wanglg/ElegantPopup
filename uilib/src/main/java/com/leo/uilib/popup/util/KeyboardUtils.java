@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
-
 
 import androidx.annotation.NonNull;
 
@@ -48,28 +49,38 @@ public final class KeyboardUtils {
      * @param popupView The view.
      * @param listener  The soft input changed listener.
      */
-    public static void registerSoftInputChangedListener(final BasePopupView popupView, final OnSoftInputChangedListener listener) {
-        Context context = popupView.getContext();
-        if (context instanceof Activity) {
-            Activity activity = (Activity) context;
-            final int flags = activity.getWindow().getAttributes().flags;
-            if ((flags & WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) != 0) {
-                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-            }
-            final FrameLayout contentView = activity.findViewById(android.R.id.content);
-            final int[] decorViewInvisibleHeightPre = {getDecorViewInvisibleHeight(activity)};
-
-            ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = () -> {
-                int height = getDecorViewInvisibleHeight(activity);
-                if (decorViewInvisibleHeightPre[0] != height) {
-                    listener.onSoftInputChanged(height);
-                    decorViewInvisibleHeightPre[0] = height;
-                }
-            };
-            contentView.getViewTreeObserver()
-                    .addOnGlobalLayoutListener(onGlobalLayoutListener);
-            globalObserverMap.put(popupView, onGlobalLayoutListener);
+    public static void registerSoftInputChangedListener(final Window window, final BasePopupView popupView, final OnSoftInputChangedListener listener) {
+        final int flags = window.getAttributes().flags;
+        if ((flags & WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) != 0) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
+        final FrameLayout contentView = window.findViewById(android.R.id.content);
+        final int[] decorViewInvisibleHeightPre = {getDecorViewInvisibleHeight(window)};
+
+        ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = () -> {
+            int height = getDecorViewInvisibleHeight(window);
+            if (decorViewInvisibleHeightPre[0] != height) {
+                listener.onSoftInputChanged(height);
+                decorViewInvisibleHeightPre[0] = height;
+            }
+        };
+        contentView.getViewTreeObserver()
+                .addOnGlobalLayoutListener(onGlobalLayoutListener);
+        globalObserverMap.put(popupView, onGlobalLayoutListener);
+    }
+
+    private static int getDecorViewInvisibleHeight(final Window window) {
+        final View decorView = window.getDecorView();
+        final Rect outRect = new Rect();
+        decorView.getWindowVisibleDisplayFrame(outRect);
+        Log.d("KeyboardUtils", "getDecorViewInvisibleHeight: "
+                + (decorView.getBottom() - outRect.bottom));
+        int delta = Math.abs(decorView.getBottom() - outRect.bottom);
+        if (delta <= PopupUtils.getNavBarHeight() + PopupUtils.getStatusBarHeight()) {
+            sDecorViewDelta = delta;
+            return 0;
+        }
+        return delta - sDecorViewDelta;
     }
 
     public static void removeLayoutChangeListener(BasePopupView popupView) {
@@ -91,6 +102,19 @@ public final class KeyboardUtils {
             }
 //        contentView.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
 //        listenerMap.remove(popupView);
+        }
+    }
+
+    public static void removeLayoutChangeListener(Window window, BasePopupView popupView) {
+        final View contentView = window.findViewById(android.R.id.content);
+        if (contentView == null) {
+            return;
+        }
+        ViewTreeObserver.OnGlobalLayoutListener tag = globalObserverMap.get(popupView);
+        if (tag != null) {
+            contentView.getViewTreeObserver().removeOnGlobalLayoutListener(tag);
+            tag = null;
+            globalObserverMap.remove(popupView);
         }
     }
 

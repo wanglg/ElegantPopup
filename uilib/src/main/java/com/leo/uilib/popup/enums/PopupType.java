@@ -13,17 +13,6 @@ public enum PopupType {
     /**
      * 依附于指定View或者指定Point的类型
      */
-    AttachWindow,
-    /**
-     * 依附于指定View或者指定Point的类型
-     */
     AttachView,
-    /**
-     * 大图浏览类型
-     */
-    ImageViewer,
-    /**
-     * 自由定位弹窗
-     */
-    Position
+
 }

@@ -1,6 +1,7 @@
 package com.leo.uilib.popup.impl.dialog;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -30,13 +31,14 @@ public class ConfirmPopupDialog extends BasePopupDialog implements View.OnClickL
 
     @Override
     public int getLayoutId() {
-        return R.layout._xpopup_center_impl_confirm;
+        return R.layout.elegant_popup_center_impl_confirm;
     }
 
     @Override
-    public void initData(JSONObject jsonObject) {
-        popupListener = popupInfo.popupListener;
+    public void initData(Bundle extData) {
+
     }
+
 
     @Override
     public void configViews() {
