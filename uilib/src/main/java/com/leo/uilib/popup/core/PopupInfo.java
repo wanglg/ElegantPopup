@@ -56,7 +56,7 @@ public class PopupInfo {
     /**
      * 是否view方式实现
      */
-    public boolean isViewMode = true;
+    public boolean isViewMode = false;
 
     public LaunchModel launchModel = LaunchModel.DEFAULT;
 

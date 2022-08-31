@@ -1,4 +1,4 @@
-package com.uq.xpopupdemo.custom;
+package com.uq.popupdemo.custom;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 
 import com.leo.uilib.popup.impl.AttachPopupView;
-import com.uq.xpopupdemo.R;
+import com.uq.popupdemo.R;
 
 
 public class CustomAttachPopup2 extends AttachPopupView {

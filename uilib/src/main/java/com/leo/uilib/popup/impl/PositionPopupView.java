@@ -31,24 +31,21 @@ public class PositionPopupView extends BasePopupView {
     @Override
     protected void initPopupContent() {
         super.initPopupContent();
-        PopupUtils.applyPopupSize((ViewGroup) getPopupContentView(), getMaxWidth(), getMaxHeight(), () -> {
-            if (popupInfo.isCenterHorizontal) {
-                float left = (PopupUtils.getWindowWidth(getContext()) - attachPopupContainer.getMeasuredWidth()) / 2f;
-                attachPopupContainer.setTranslationX(left);
-            } else {
-                attachPopupContainer.setTranslationX(popupInfo.offsetX);
-            }
-            attachPopupContainer.setTranslationY(popupInfo.offsetY);
-        });
-
+        PopupUtils.applyPopupSize((ViewGroup) getPopupContentView(), getMaxWidth(), getMaxHeight());
         if (popupInfo != null) {
             LayoutParams vl = (LayoutParams) attachPopupContainer.getLayoutParams();
             if (popupInfo.popupPosition == PopupPosition.Bottom) {
                 vl.gravity = Gravity.BOTTOM;
+                vl.bottomMargin = popupInfo.offsetY;
+                vl.leftMargin = popupInfo.offsetX;
             } else if (popupInfo.popupPosition == PopupPosition.Top_Right) {
                 vl.gravity = Gravity.END | Gravity.TOP;
+                vl.topMargin = popupInfo.offsetY;
+                vl.rightMargin = popupInfo.offsetX;
             } else if (popupInfo.popupPosition == PopupPosition.Bottom_Right) {
                 vl.gravity = Gravity.END | Gravity.BOTTOM;
+                vl.bottomMargin = popupInfo.offsetY;
+                vl.rightMargin = popupInfo.offsetX;
             }
         }
     }

@@ -88,12 +88,7 @@ public abstract class DrawerPopupView extends BasePopupView {
         getPopupImplView().setTranslationX(popupInfo.offsetX);
         getPopupImplView().setTranslationY(popupInfo.offsetY);
         drawerLayout.setDrawerPosition(popupInfo.popupPosition == null ? PopupPosition.Left : popupInfo.popupPosition);
-        drawerLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.close();
-            }
-        });
+        drawerLayout.setOnClickListener(v -> drawerLayout.close());
     }
 
     @Override

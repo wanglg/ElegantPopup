@@ -1,4 +1,4 @@
-package com.uq.xpopupdemo;
+package com.uq.popupdemo;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.leo.uilib.popup.Popup;
 import com.leo.uilib.popup.core.PopupManager;
-import com.uq.xpopupdemo.fragment.QuickStartDemo;
+import com.uq.popupdemo.fragment.QuickStartDemo;
 
 public class MainActivity extends AppCompatActivity {
 

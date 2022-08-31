@@ -1,4 +1,4 @@
-package com.uq.xpopupdemo.fragment;
+package com.uq.popupdemo.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.lxj.statelayout.StateLayout;
-import com.uq.xpopupdemo.ElegantPopupApp;
+import com.uq.popupdemo.ElegantPopupApp;
 
 /**
  * Description:

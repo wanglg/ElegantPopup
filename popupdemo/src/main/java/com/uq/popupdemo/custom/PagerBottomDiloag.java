@@ -1,6 +1,7 @@
-package com.uq.xpopupdemo.custom;
+package com.uq.popupdemo.custom;
 
-import android.content.Context;;
+import android.content.Context;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,48 +15,60 @@ import androidx.core.widget.NestedScrollView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.leo.uilib.popup.impl.BottomPopupView;
+import com.leo.uilib.popup.impl.dialog.BottomSheetPopupDialog;
 import com.leo.uilib.popup.util.PopupUtils;
-import com.uq.xpopupdemo.R;
+import com.uq.popupdemo.R;
+
+;
 
 
 /**
  * Description:
  * Create by dance, at 2019/5/5
  */
-public class PagerBottomPopup extends BottomPopupView {
-    public PagerBottomPopup(@NonNull Context context) {
+public class PagerBottomDiloag extends BottomSheetPopupDialog {
+    public PagerBottomDiloag(@NonNull Context context) {
         super(context);
     }
 
-    @Override
-    protected int getImplLayoutId() {
-        return R.layout.custom_view_pager;
-    }
 
     ViewPager pager;
 
 
     @Override
+    public int getLayoutId() {
+        return R.layout.custom_view_pager;
+    }
+
+    @Override
+    public void initData(Bundle jsonObject) {
+
+    }
+
+    @Override
     public void configViews() {
-        super.configViews();
         pager = findViewById(R.id.pager);
         pager.setAdapter(new PAdapter());
     }
 
     @Override
-    protected void onShow() {
+    public void requestData() {
+
+    }
+
+    @Override
+    public void onShow() {
         super.onShow();
     }
 
     @Override
-    protected void onDismiss() {
+    public void onDismiss() {
         super.onDismiss();
     }
 
     @Override
     protected int getMaxHeight() {
-        return (int) (PopupUtils.dp2px(getContext(), 450));
+        return (PopupUtils.dp2px(getContext(), 450));
     }
 
     class PAdapter extends PagerAdapter {

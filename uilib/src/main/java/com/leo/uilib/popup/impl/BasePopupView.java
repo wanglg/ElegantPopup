@@ -13,11 +13,13 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -54,6 +56,10 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
     protected PopupAnimator popupContentAnimator;
     protected ShadowBgAnimator shadowBgAnimator;
     private int touchSlop;
+    /**
+     * 修改前的softmode
+     */
+    private int preSoftMode = -1;
     public PopupStatus popupStatus = PopupStatus.Dismiss;
     private boolean isCreated = false;
     Runnable dismissWithRunnable;
@@ -269,6 +275,9 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         }
 
         Runnable runnable = () -> {
+            if (popupStatus == PopupStatus.Showing || popupStatus == PopupStatus.Dismissing) {
+                return;
+            }
             if (popupInfo.isViewMode && getParent() != null) {
                 ((ViewGroup) getParent()).removeView(BasePopupView.this);
             }
@@ -280,6 +289,10 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
             }
             attachToHost();
             if (popupInfo.observeSoftKeyboard) {
+                if (popupInfo.isViewMode) {
+                    preSoftMode = getHostWindow().getAttributes().softInputMode;
+                    getHostWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                }
                 KeyboardUtils.registerSoftInputChangedListener(getHostWindow(), this, height -> {
                     if (popupInfo.popupType == PopupType.AttachView) {
                         return;
@@ -414,7 +427,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         postDelayed(doAfterShowTask, getAnimationDuration());
     }
 
-    private Runnable doAfterShowTask = new Runnable() {
+    private final Runnable doAfterShowTask = new Runnable() {
         @Override
         public void run() {
             popupStatus = PopupStatus.Show;
@@ -483,7 +496,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         }
     }
 
-    class ShowSoftInputTask implements Runnable {
+    static class ShowSoftInputTask implements Runnable {
         View focusView;
         boolean isDone = false;
 
@@ -692,6 +705,9 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         if (popupInfo.autoOpenSoftInput) {
             KeyboardUtils.hideSoftInput(this);
         }
+        if (hasMoveUp) {
+            PopupUtils.moveDown(this);
+        }
         clearFocus();
         doDismissAnimation();
         doAfterDismiss();
@@ -810,6 +826,9 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         super.onAttachedToWindow();
         NavigationBarObserver.getInstance().register(getContext());
         NavigationBarObserver.getInstance().addOnNavigationBarListener(this);
+        if (getContext() instanceof FragmentActivity) {
+            ((FragmentActivity) getContext()).getLifecycle().addObserver(this);
+        }
     }
 
     @Override
@@ -822,12 +841,25 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         }
         popupStatus = PopupStatus.Dismiss;
         showSoftInputTask = null;
+        if (hasMoveUp) {
+            //隐藏软键盘
+            if (KeyboardUtils.isSoftInputVisible((Activity) getContext())) {
+                KeyboardUtils.hideSoftInput(BasePopupView.this);
+            }
+        }
         hasMoveUp = false;
         NavigationBarObserver.getInstance().removeOnNavigationBarListener(BasePopupView.this);
         if (popupInfo != null) {
             if (popupInfo.observeSoftKeyboard) {
                 KeyboardUtils.removeLayoutChangeListener(getHostWindow(), BasePopupView.this);
             }
+            if (popupInfo.isViewMode && popupInfo.observeSoftKeyboard && preSoftMode != -1) {
+                //还原WindowSoftMode
+                getHostWindow().setSoftInputMode(preSoftMode);
+            }
+        }
+        if (getContext() instanceof FragmentActivity) {
+            ((FragmentActivity) getContext()).getLifecycle().removeObserver(this);
         }
     }
 

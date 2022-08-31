@@ -1,4 +1,4 @@
-package com.uq.xpopupdemo.custom;
+package com.uq.popupdemo.custom;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,7 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.leo.uilib.popup.impl.DrawerPopupView;
-import com.uq.xpopupdemo.R;
+import com.uq.popupdemo.R;
 
 
 /**

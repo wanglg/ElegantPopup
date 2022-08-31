@@ -318,68 +318,69 @@ public class PopupUtils {
         if (!pv.popupInfo.isMoveUpToKeyboard) {
             return;
         }
-        //判断是否盖住输入框
-        ArrayList<EditText> allEts = new ArrayList<>();
-        findAllEditText(allEts, pv);
-        EditText focusEt = null;
-        for (EditText et : allEts) {
-            if (et.isFocused()) {
-                focusEt = et;
-                break;
+        pv.post(() -> {
+            //判断是否盖住输入框
+            ArrayList<EditText> allEts = new ArrayList<>();
+            findAllEditText(allEts, pv);
+            EditText focusEt = null;
+            for (EditText et : allEts) {
+                if (et.isFocused()) {
+                    focusEt = et;
+                    break;
+                }
             }
-        }
 
-        int dy = 0;
-        int popupHeight = pv.getPopupContentView().getHeight();
-        int popupWidth = pv.getPopupContentView().getWidth();
-        if (pv.getPopupImplView() != null) {
-            popupHeight = Math.min(popupHeight, pv.getPopupImplView().getMeasuredHeight());
-            popupWidth = Math.min(popupWidth, pv.getPopupImplView().getMeasuredWidth());
-        }
-        int windowHeight = getWindowHeight(pv.getContext());
-        int focusEtTop = 0;
-        int focusBottom = 0;
-        if (focusEt != null) {
-            int[] locations = new int[2];
-            focusEt.getLocationInWindow(locations);
-            focusEtTop = locations[1];
-            focusBottom = focusEtTop + focusEt.getMeasuredHeight();
-        }
+            int dy = 0;
+            int popupHeight = pv.getPopupContentView().getHeight();
+            int popupWidth = pv.getPopupContentView().getWidth();
+            if (pv.getPopupImplView() != null) {
+                popupHeight = Math.min(popupHeight, pv.getPopupImplView().getMeasuredHeight());
+                popupWidth = Math.min(popupWidth, pv.getPopupImplView().getMeasuredWidth());
+            }
+            int windowHeight = getWindowHeight(pv.getContext());
+            int focusEtTop = 0;
+            int focusBottom = 0;
+            if (focusEt != null) {
+                int[] locations = new int[2];
+                focusEt.getLocationInWindow(locations);
+                focusEtTop = locations[1];
+                focusBottom = focusEtTop + focusEt.getMeasuredHeight();
+            }
 
 
-        //执行上移
-        if (pv instanceof FullScreenPopupView ||
-                (popupWidth == PopupUtils.getWindowWidth(pv.getContext()) &&
-                        popupHeight == (PopupUtils.getWindowHeight(pv.getContext()) + PopupUtils.getStatusBarHeight()))
-        ) {
-            // 如果是全屏弹窗，特殊处理，只要输入框没被盖住，就不移动。
-            if (focusBottom + keyboardHeight < windowHeight) {
-                return;
+            //执行上移
+            if (pv instanceof FullScreenPopupView ||
+                    (popupWidth == PopupUtils.getWindowWidth(pv.getContext()) &&
+                            popupHeight == (PopupUtils.getWindowHeight(pv.getContext()) + PopupUtils.getStatusBarHeight()))
+            ) {
+                // 如果是全屏弹窗，特殊处理，只要输入框没被盖住，就不移动。
+                if (focusBottom + keyboardHeight < windowHeight) {
+                    return;
+                }
             }
-        }
-        if (pv instanceof FullScreenPopupView) {
-            int overflowHeight = (focusBottom + keyboardHeight) - windowHeight;
-            if (focusEt != null && overflowHeight > 0) {
-                dy = overflowHeight;
-            }
-        } else if (pv instanceof CenterPopupView) {
-            int targetY = keyboardHeight - (windowHeight - popupHeight + getStatusBarHeight()) / 2; //上移到下边贴着输入法的高度
+            if (pv instanceof FullScreenPopupView) {
+                int overflowHeight = (focusBottom + keyboardHeight) - windowHeight;
+                if (focusEt != null && overflowHeight > 0) {
+                    dy = overflowHeight;
+                }
+            } else if (pv instanceof CenterPopupView) {
+                int targetY = keyboardHeight - (windowHeight - popupHeight + getStatusBarHeight()) / 2; //上移到下边贴着输入法的高度
 
-            if (focusEt != null && focusEtTop - targetY < 0) {
-                targetY += focusEtTop - targetY - getStatusBarHeight();//限制不能被状态栏遮住
-            }
-            dy = Math.max(0, targetY);
-        } else if (pv instanceof BottomPopupView) {
-            dy = keyboardHeight;
-            if (focusEt != null && focusEtTop - dy < 0) {
-                dy += focusEtTop - dy - getStatusBarHeight();//限制不能被状态栏遮住
-            }
-        } else if (pv instanceof DrawerPopupView) {
-            int overflowHeight = (focusBottom + keyboardHeight) - windowHeight;
-            if (focusEt != null && overflowHeight > 0) {
-                dy = overflowHeight;
-            }
-        } /*else if (isTopPartShadow(pv)) {
+                if (focusEt != null && focusEtTop - targetY < 0) {
+                    targetY += focusEtTop - targetY - getStatusBarHeight();//限制不能被状态栏遮住
+                }
+                dy = Math.max(0, targetY);
+            } else if (pv instanceof BottomPopupView) {
+                dy = keyboardHeight;
+                if (focusEt != null && focusEtTop - dy < 0) {
+                    dy += focusEtTop - dy - getStatusBarHeight();//限制不能被状态栏遮住
+                }
+            } else if (pv instanceof DrawerPopupView) {
+                int overflowHeight = (focusBottom + keyboardHeight) - windowHeight;
+                if (focusEt != null && overflowHeight > 0) {
+                    dy = overflowHeight;
+                }
+            } /*else if (isTopPartShadow(pv)) {
             int overflowHeight = (focusBottom + keyboardHeight) - windowHeight;
             if (focusEt != null && overflowHeight > 0) {
                 dy = overflowHeight;
@@ -392,14 +393,16 @@ public class PopupUtils {
             }
             return;
         }*/
-        //dy=0说明没有触发移动，有些弹窗有translationY，不能影响它们
-        if (dy == 0 && pv.getPopupContentView().getTranslationY() != 0) {
-            return;
-        }
-        pv.getPopupContentView().animate().translationY(-dy)
-                .setDuration(200)
-                .setInterpolator(new OvershootInterpolator(0))
-                .start();
+            //dy=0说明没有触发移动，有些弹窗有translationY，不能影响它们
+            if (dy == 0 && pv.getPopupContentView().getTranslationY() != 0) {
+                return;
+            }
+            pv.getPopupContentView().animate().translationY(-dy)
+                    .setDuration(200)
+                    .setInterpolator(new OvershootInterpolator(0))
+                    .start();
+        });
+
     }
 
 }

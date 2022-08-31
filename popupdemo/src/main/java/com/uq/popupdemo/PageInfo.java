@@ -1,6 +1,6 @@
-package com.uq.xpopupdemo;
+package com.uq.popupdemo;
 
-import com.uq.xpopupdemo.fragment.BaseFragment;
+import com.uq.popupdemo.fragment.BaseFragment;
 
 /**
  * Description:

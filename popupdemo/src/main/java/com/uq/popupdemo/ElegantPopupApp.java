@@ -1,4 +1,4 @@
-package com.uq.xpopupdemo;
+package com.uq.popupdemo;
 
 import android.app.Application;
 import android.content.Context;

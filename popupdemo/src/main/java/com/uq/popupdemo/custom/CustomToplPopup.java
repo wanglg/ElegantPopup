@@ -1,4 +1,4 @@
-package com.uq.xpopupdemo.custom;
+package com.uq.popupdemo.custom;
 
 import android.content.Context;
 
@@ -8,7 +8,7 @@ import com.leo.uilib.popup.animator.PopupAnimator;
 import com.leo.uilib.popup.animator.TranslateAnimator;
 import com.leo.uilib.popup.enums.PopupAnimation;
 import com.leo.uilib.popup.impl.PositionPopupView;
-import com.uq.xpopupdemo.R;
+import com.uq.popupdemo.R;
 
 
 /**

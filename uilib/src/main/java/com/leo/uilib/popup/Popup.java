@@ -132,12 +132,14 @@ public class Popup {
 
         /**
          * 设置弹窗依附的View
+         * isViewMode 自动设置true
          *
          * @param atView
          * @return
          */
         public Builder atView(View atView) {
             this.popupInfo.atView = atView;
+            this.popupInfo.isViewMode = true;
             return this;
         }
 

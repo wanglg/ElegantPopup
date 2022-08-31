@@ -1,4 +1,4 @@
-package com.uq.xpopupdemo.fragment;
+package com.uq.popupdemo.fragment;
 
 import android.graphics.Color;
 import android.util.Log;
@@ -8,17 +8,16 @@ import com.leo.uilib.popup.Popup;
 import com.leo.uilib.popup.core.SimplePopupListener;
 import com.leo.uilib.popup.enums.LaunchModel;
 import com.leo.uilib.popup.enums.PopupPosition;
-import com.leo.uilib.popup.enums.PopupType;
 import com.leo.uilib.popup.impl.LoadingPopupView;
-import com.uq.xpopupdemo.R;
-import com.uq.xpopupdemo.custom.CustomAttachPopup2;
-import com.uq.xpopupdemo.custom.CustomDrawerPopupView;
-import com.uq.xpopupdemo.custom.CustomFullScreenDialog;
-import com.uq.xpopupdemo.custom.CustomFullScreenPopup;
-import com.uq.xpopupdemo.custom.CustomToplPopup;
-import com.uq.xpopupdemo.custom.PagerBottomDiloag;
-import com.uq.xpopupdemo.custom.PagerBottomPopup;
-import com.uq.xpopupdemo.custom.PagerDrawerPopup;
+import com.uq.popupdemo.R;
+import com.uq.popupdemo.custom.CustomAttachPopup2;
+import com.uq.popupdemo.custom.CustomDrawerPopupView;
+import com.uq.popupdemo.custom.CustomFullScreenDialog;
+import com.uq.popupdemo.custom.CustomFullScreenPopup;
+import com.uq.popupdemo.custom.CustomToplPopup;
+import com.uq.popupdemo.custom.PagerBottomDiloag;
+import com.uq.popupdemo.custom.PagerBottomPopup;
+import com.uq.popupdemo.custom.PagerDrawerPopup;
 
 
 public class QuickStartDemo extends BaseFragment implements View.OnClickListener {
@@ -101,6 +100,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                 new Popup.Builder(getContext())
                         .hasShadowBg(false)
                         .offsetY(200)
+                        .offsetX(100)
                         .popupPosition(PopupPosition.Top_Right)
                         .asCustom(new CustomToplPopup(getContext()))
                         .showPopup();

@@ -1,9 +1,9 @@
-package com.uq.xpopupdemo.custom;
+package com.uq.popupdemo.custom;
 
 import android.content.Context;
 
 import com.leo.uilib.popup.impl.dialog.FullScreenPopupDialog;
-import com.uq.xpopupdemo.R;
+import com.uq.popupdemo.R;
 
 /**
  * @Author: wangliugeng

@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:hint="测试软键盘交互" />
+            android:hint="测试软键盘交互1" />
 
         <View
             android:background="#ccc"
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:hint="测试软键盘交互" />
+            android:hint="测试软键盘交互2" />
 
         <View
             android:background="#9C27B0"
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="85dp"
-            android:hint="测试软键盘交互" />
+            android:hint="测试软键盘交互3" />
         <View
             android:background="#AC5959"
             android:layout_width="match_parent"
