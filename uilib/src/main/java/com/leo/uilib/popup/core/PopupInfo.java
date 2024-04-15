@@ -69,6 +69,7 @@ public class PopupInfo {
     public int shadowBgColor = 0;
 
     public int statusBarBgColor = 0;
+    public int id = 0;
 
     public View getAtView() {
         return atView;

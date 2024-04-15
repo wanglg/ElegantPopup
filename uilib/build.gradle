@@ -39,7 +39,7 @@ publish {
     userOrg = 'leowong'
     groupId = 'com.leo.uilib'
     artifactId = 'elegant-popup'
-    publishVersion = '0.0.2'
+    publishVersion = '0.0.3'
     desc = '优雅的弹窗解决方案'
     website = 'https://github.com/wanglg/ElegantPopup'
 }

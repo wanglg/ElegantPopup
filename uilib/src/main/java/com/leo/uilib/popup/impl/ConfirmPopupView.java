@@ -3,12 +3,13 @@ package com.leo.uilib.popup.impl;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.leo.uilib.popup.R;
 import com.leo.uilib.popup.Popup;
+import com.leo.uilib.popup.R;
 import com.leo.uilib.popup.core.IPopupListener;
 
 
@@ -19,6 +20,7 @@ import com.leo.uilib.popup.core.IPopupListener;
 public class ConfirmPopupView extends CenterPopupView implements View.OnClickListener {
     IPopupListener popupListener;
     TextView tv_title, tv_content, tv_cancel, tv_confirm;
+    EditText et_input;
     String title, content, hint, cancelText, confirmText;
     boolean isHideCancel = false;
 
@@ -49,6 +51,7 @@ public class ConfirmPopupView extends CenterPopupView implements View.OnClickLis
         tv_content = findViewById(R.id.tv_content);
         tv_cancel = findViewById(R.id.tv_cancel);
         tv_confirm = findViewById(R.id.tv_confirm);
+        et_input = findViewById(R.id.et_input);
 
         if (bindLayoutId == 0) {
             applyPrimaryColor();
@@ -70,12 +73,24 @@ public class ConfirmPopupView extends CenterPopupView implements View.OnClickLis
         }
         if (!TextUtils.isEmpty(cancelText)) {
             tv_cancel.setText(cancelText);
+        } else {
+            tv_cancel.setText(getResources().getString(R.string.cancel));
         }
         if (!TextUtils.isEmpty(confirmText)) {
             tv_confirm.setText(confirmText);
+        } else {
+            tv_cancel.setText(getResources().getString(R.string.ok));
         }
         if (isHideCancel) {
             tv_cancel.setVisibility(GONE);
+        }
+        if (hint != null) {
+            et_input.setVisibility(View.VISIBLE);
+            tv_content.setVisibility(View.GONE);
+            et_input.setHint(hint);
+            if (!TextUtils.isEmpty(content)) {
+                et_input.setText(content);
+            }
         }
     }
 
@@ -103,6 +118,11 @@ public class ConfirmPopupView extends CenterPopupView implements View.OnClickLis
 
     public ConfirmPopupView setConfirmText(String confirmText) {
         this.confirmText = confirmText;
+        return this;
+    }
+
+    public ConfirmPopupView setHintText(String hintText) {
+        this.hint = hintText;
         return this;
     }
 

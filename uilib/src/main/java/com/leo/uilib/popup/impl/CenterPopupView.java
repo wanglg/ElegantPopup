@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
+import com.leo.uilib.popup.Popup;
 import com.leo.uilib.popup.R;
 import com.leo.uilib.popup.animator.PopupAnimator;
 import com.leo.uilib.popup.animator.ScaleAlphaAnimator;
@@ -60,12 +61,12 @@ public class CenterPopupView extends BasePopupView {
 
     @Override
     protected int getMaxWidth() {
-        return popupInfo.maxWidth == 0 ? (int) (PopupUtils.getWindowWidth(getContext()) * 0.86f)
+        return popupInfo.maxWidth == 0 ? (int) (PopupUtils.getShortWidth(getContext()) * Popup.window_width_scale)
                 : popupInfo.maxWidth;
     }
 
     @Override
     protected PopupAnimator getPopupAnimator() {
-        return new ScaleAlphaAnimator(getPopupContentView(), getAnimationDuration(),PopupAnimation.ScaleAlphaFromCenter);
+        return new ScaleAlphaAnimator(getPopupContentView(), getAnimationDuration(), PopupAnimation.ScaleAlphaFromCenter);
     }
 }

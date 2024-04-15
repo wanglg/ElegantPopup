@@ -49,6 +49,7 @@ public class Popup {
      * 全局确认提醒弹框布局
      */
     public static int confirmLayoutId = R.layout.elegant_popup_center_impl_confirm;
+    public static float window_width_scale = 0.78f;
 
     /**
      * 设置主色调
@@ -366,6 +367,10 @@ public class Popup {
             return this;
         }
 
+        public Builder setId(int id) {
+            this.popupInfo.id = id;
+            return this;
+        }
         /****************************************** 便捷方法 ****************************************/
         /**
          * 显示确认和取消对话框
@@ -378,10 +383,10 @@ public class Popup {
          * @param isHideCancel   是否隐藏取消按钮
          * @return
          */
-        public ConfirmPopupView asConfirm(String title, String content, String cancelBtnText, String confirmBtnText, IPopupListener popupListener, boolean isHideCancel) {
+        public ConfirmPopupView asConfirm(String title, String content, String hint, String cancelBtnText, String confirmBtnText, IPopupListener popupListener, boolean isHideCancel) {
             popupType(PopupType.Center);
             ConfirmPopupView popupView = new ConfirmPopupView(this.context);
-            popupView.setTitleContent(title, content, null);
+            popupView.setTitleContent(title, content, hint);
             popupView.setCancelText(cancelBtnText);
             popupView.setConfirmText(confirmBtnText);
             popupView.setListener(popupListener);
@@ -390,6 +395,16 @@ public class Popup {
             }
             popupView.setPopupInfo(this.popupInfo);
             return popupView;
+        }
+
+        public ConfirmPopupView asConfirm(String title, String content, String cancelBtnText, String confirmBtnText, IPopupListener popupListener, boolean isHideCancel) {
+
+            return asConfirm(title, content, null, cancelBtnText, confirmBtnText, popupListener, isHideCancel);
+        }
+
+        public ConfirmPopupView asConfirm(String title, String content) {
+
+            return asConfirm(title, content, null, null, null, null, false);
         }
 
         //

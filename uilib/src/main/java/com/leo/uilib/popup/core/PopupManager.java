@@ -177,6 +177,32 @@ public class PopupManager {
         return result;
     }
 
+    public IPopup getPopupById(Context context, int id) {
+        IPopup iPopup = null;
+        if (context != null && id != 0) {
+            String key = context.hashCode() + "";
+            List<SoftReference<IPopup>> popupList = linkedHashMap.get(key);
+            if (popupList != null && popupList.size() > 0) {
+                for (int i = 0; i < popupList.size(); i++) {
+                    IPopup last = popupList.get(i).get();
+                    if (last == null || last.getPopupInfo() == null) {
+                        continue;
+                    }
+                    if (last.isDismiss()) {
+                        continue;
+                    }
+                    if (last.getPopupInfo().id == id) {
+                        iPopup = last;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return iPopup;
+
+    }
+
     public List<IPopup> getAllCenterPopup(Context context) {
         List<IPopup> result = new ArrayList<>();
         if (context != null) {

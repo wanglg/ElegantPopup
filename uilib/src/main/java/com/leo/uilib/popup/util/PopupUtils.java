@@ -103,6 +103,10 @@ public class PopupUtils {
         return ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getHeight();
     }
 
+    public static int getShortWidth(Context context) {
+        return Math.min(getWindowWidth(context), getWindowHeight(context));
+    }
+
     public static int dp2px(Context context, float dipValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);

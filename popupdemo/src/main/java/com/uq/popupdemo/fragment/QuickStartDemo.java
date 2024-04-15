@@ -54,12 +54,25 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnShowConfirm: //带确认和取消按钮的弹窗
+//                new Popup.Builder(getContext())
+//                        .isViewMode(false)
+//                        .shadowBgColor(Color.parseColor("#33000000"))
+//                        .asConfirm(
+//                                "我是标题",
+//                                "我是内容。",
+//                                "取消",
+//                                "确定"
+//                                , null,
+//                                false)
+//                        .showPopup();
+
                 new Popup.Builder(getContext())
                         .isViewMode(false)
                         .shadowBgColor(Color.parseColor("#33000000"))
                         .asConfirm(
                                 "我是标题",
                                 "我是内容。",
+                                "我是hint",
                                 "取消",
                                 "确定"
                                 , null,
