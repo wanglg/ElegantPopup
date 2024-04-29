@@ -1,7 +1,10 @@
 package com.leo.uilib.popup.impl.dialog;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.os.Build;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -41,44 +44,48 @@ public class ElegantHostDialog extends AppCompatDialog {
 //        return super.dispatchTouchEvent(event);
 //    }
 
+
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Window window = getWindow();
         if (window != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            }
-//            if (Build.VERSION.SDK_INT >= 21) {
-////                setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, false);
-//                getWindow().setStatusBarColor(contentView.popupInfo.shadowBgColor);
-////                int navigationBarColor = getNavigationBarColor();
-////                if (navigationBarColor != 0) {
-////                    getWindow().setNavigationBarColor(navigationBarColor);
-////                }
-//                //getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS); //尝试兼容部分手机上的状态栏空白问题
-//            }
-//            setUiFlags(true);
+            window.getDecorView().setPadding(0, 0, 0, 0);
+            window.getAttributes().format = PixelFormat.TRANSPARENT;
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
             window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-            if (contentView != null && contentView.popupInfo.observeSoftKeyboard) {
-                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            window.getDecorView().setSystemUiVisibility(option);
+            window.setBackgroundDrawable(null);
+
+            //remove status bar shadow
+            if (Build.VERSION.SDK_INT == 19) {  //解决4.4上状态栏闪烁的问题
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            } else if (Build.VERSION.SDK_INT == 20) {
+                setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, true);
+            } else if (Build.VERSION.SDK_INT >= 21) {
+                setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, false);
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS); //尝试兼容部分手机上的状态栏空白问题
             }
         }
+
     }
 
-    //    private int getNavigationBarColor(){
-//        return contentView.popupInfo.navigationBarColor==0 ? XPopup.getNavigationBarColor()
-//                : contentView.popupInfo.navigationBarColor;
-//    }
-//    public void setWindowFlag(final int bits, boolean on) {
-//        WindowManager.LayoutParams winParams = getWindow().getAttributes();
-//        if (on) {
-//            winParams.flags |= bits;
-//        } else {
-//            winParams.flags &= ~bits;
-//        }
-//        getWindow().setAttributes(winParams);
-//    }
+    public void setWindowFlag(final int bits, boolean on) {
+        WindowManager.LayoutParams winParams = getWindow().getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        getWindow().setAttributes(winParams);
+    }
 //
 //    void setUiFlags(Boolean fullscreen) {
 //        Window win = getWindow();

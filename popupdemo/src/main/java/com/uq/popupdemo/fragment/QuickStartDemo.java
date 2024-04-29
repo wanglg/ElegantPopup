@@ -68,7 +68,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
 
                 new Popup.Builder(getContext())
                         .isViewMode(false)
-                        .shadowBgColor(Color.parseColor("#33000000"))
+                        .shadowBgColor(Color.parseColor("#66000000"))
                         .asConfirm(
                                 "我是标题",
                                 "我是内容。",
