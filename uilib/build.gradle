@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
@@ -35,11 +34,11 @@ dependencies {
     api rootProject.ext.dependencies["appcompatX"]
     api rootProject.ext.dependencies["material"]
 }
-publish {
-    userOrg = 'leowong'
-    groupId = 'com.leo.uilib'
-    artifactId = 'elegant-popup'
-    publishVersion = '0.0.4'
-    desc = '优雅的弹窗解决方案'
-    website = 'https://github.com/wanglg/ElegantPopup'
-}
+//publish {
+//    userOrg = 'leowong'
+//    groupId = 'com.leo.uilib'
+//    artifactId = 'elegant-popup'
+//    publishVersion = '0.0.4'
+//    desc = '优雅的弹窗解决方案'
+//    website = 'https://github.com/wanglg/ElegantPopup'
+//}
