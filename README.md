@@ -40,7 +40,7 @@ XPopup库只支持view的弹框，这样在使用的时候，有一定的局限�
 添加依赖
 
 ```
-implementation 'com.leo.uilib:elegant-popup:0.0.2'
+implementation 'com.leo.uilib:elegant-popup:0.0.4'
 ```
 
 需支持androidx和Java8支持
