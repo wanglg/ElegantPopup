@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.lxj.statelayout.StateLayout;
 import com.uq.popupdemo.ElegantPopupApp;
 
 /**
@@ -20,15 +19,14 @@ import com.uq.popupdemo.ElegantPopupApp;
 public abstract class BaseFragment extends Fragment {
     View view;
     boolean isInit = false;
-    StateLayout stateLayout;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(getLayoutId(), container, false);
-            stateLayout = new StateLayout(getContext()).wrap(view).showLoading(false);
         }
-        return stateLayout;
+        return view;
     }
 
     @Override
@@ -38,16 +36,10 @@ public abstract class BaseFragment extends Fragment {
     }
 
     private void safeInit() {
-        if (getUserVisibleHint() && view!=null) {
+        if (getUserVisibleHint() && view != null) {
             if (!isInit) {
                 isInit = true;
                 init(view);
-                stateLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        stateLayout.showContent();
-                    }
-                },300);
             }
         }
     }
@@ -59,6 +51,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected abstract int getLayoutId();
+
     public abstract void init(View view);
 
     public void toast(String msg) {

@@ -2,12 +2,10 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
-
+    namespace 'com.leo.uilib.popup'
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion rootProject.ext.android["targetSdkVersion"]
-        versionCode rootProject.ext.android["versionCode"]
-        versionName rootProject.ext.android["versionName"]
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

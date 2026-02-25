@@ -2,8 +2,9 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
+    namespace 'com.uq.popupdemo'
     defaultConfig {
-        applicationId "com.leo.uilib.popupdemo"
+        applicationId "com.uq.popupdemo"
         minSdkVersion rootProject.ext.android["minSdkVersion"]
         targetSdkVersion rootProject.ext.android["targetSdkVersion"]
         versionCode rootProject.ext.android["versionCode"]
@@ -31,15 +32,17 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.lxj:easyadapter:1.1.1'
+//    implementation 'com.android.support:appcompat-v7:28.0.0'
+//    implementation 'com.android.support:recyclerview-v7:28.0.0'
+//    implementation 'com.android.support:design:28.0.0'
+//    implementation 'com.lxj:easyadapter:1.1.1'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation project(':uilib')
-    implementation 'com.blankj:utilcode:1.24.2'
+//    implementation 'com.blankj:utilcode:1.24.2'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
-    implementation 'com.android.support:cardview-v7:28.0.0'
-    implementation 'com.lxj:statelayout:1.0.5'
+//    implementation 'com.android.support:cardview-v7:28.0.0'
+//    implementation 'com.lxj:statelayout:1.0.5'
+//    implementation 'com.github.li-xiaojun:StateLayout:1.3.4'
+//    implementation 'com.github.liangjingkanji:StateLayout:1.4.2'
 }
 
