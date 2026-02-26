@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -19,12 +20,16 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.RequiresApi;
+import androidx.core.graphics.ColorUtils;
 
 import com.leo.uilib.popup.impl.BasePopupView;
 import com.leo.uilib.popup.impl.BottomPopupView;
@@ -215,18 +220,17 @@ public class PopupUtils {
         return getDecorViewInvisibleHeight(activity) > 0;
     }
 
-    private static int sDecorViewDelta = 0;
 
     public static int getDecorViewInvisibleHeight(final Activity activity) {
         final View decorView = activity.getWindow().getDecorView();
         final Rect outRect = new Rect();
         decorView.getWindowVisibleDisplayFrame(outRect);
         int delta = Math.abs(decorView.getBottom() - outRect.bottom);
-        if (delta <= getNavBarHeight()) {
-            sDecorViewDelta = delta;
+        int navigationBarHeight = getNavBarHeight();
+        if (delta <= navigationBarHeight) {
             return 0;
         }
-        return delta - sDecorViewDelta;
+        return delta - navigationBarHeight;
     }
 
 
@@ -298,6 +302,40 @@ public class PopupUtils {
 
         return isVisible;
     }
+
+    /**
+     * 判断底部导航栏是否可见（Android 5.0+）
+     *
+     * @param window Activity对象
+     * @return true表示导航栏可见，false表示不可见
+     */
+    public static boolean isNavigationBarVisible(Window window) {
+        if (window == null) return false;
+
+        View decorView = window.getDecorView();
+
+        // 获取WindowInsets
+        WindowInsets insets = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            insets = decorView.getRootWindowInsets();
+        }
+        if (insets == null) return false;
+
+        // 判断底部导航栏的inset是否大于0
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Android 11+ 使用新API
+            Insets navigationBarInsets = insets.getInsets(WindowInsets.Type.navigationBars());
+            return navigationBarInsets.bottom > 0;
+        } else {
+            // Android 5.0 - 10
+            int bottomInset = 0;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+                bottomInset = insets.getSystemWindowInsetBottom();
+            }
+            return bottomInset > 0;
+        }
+    }
+
 
     public static void findAllEditText(ArrayList<EditText> list, ViewGroup group) {
         for (int i = 0; i < group.getChildCount(); i++) {
@@ -409,4 +447,51 @@ public class PopupUtils {
 
     }
 
+    /**
+     * 设置导航栏颜色，并自动处理图标颜色兼容性
+     *
+     * @param window 目标 Activity
+     * @param color  想要设置的导航栏背景色
+     */
+    public static void setNavigationBarColor(Window window, @ColorInt int color) {
+        if (window == null) return;
+
+        // 设置导航栏背景色
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.setNavigationBarColor(color);
+        }
+
+        // 获取 WindowInsetsController
+        WindowInsetsController controller = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            controller = window.getInsetsController();
+        }
+        if (controller == null) return;
+
+        // 判断是否需要深色图标
+        boolean isLightBackground = ColorUtils.calculateLuminance(color) > 0.5;
+
+        if (isLightBackground) {
+            // 设置深色导航栏图标（用于浅色背景）
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                controller.setSystemBarsAppearance(
+                        WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS,
+                        WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+                );
+            }
+        } else {
+            // 设置浅色导航栏图标（用于深色背景）
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                controller.setSystemBarsAppearance(
+                        0,  // 清除标志位
+                        WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+                );
+            }
+        }
+
+        // 去除系统强制的半透明遮罩
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.setNavigationBarContrastEnforced(false);
+        }
+    }
 }

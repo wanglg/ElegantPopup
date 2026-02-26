@@ -67,7 +67,6 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
 //                        .showPopup();
 
                 new Popup.Builder(getContext())
-                        .isViewMode(false)
                         .shadowBgColor(Color.parseColor("#66000000"))
                         .asConfirm(
                                 "我是标题",
@@ -104,7 +103,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
             case R.id.btnPagerBottomPopup: //自定义的底部弹窗
                 new Popup.Builder(getContext())
 //                        .moveUpToKeyboard(false) //如果不加这个，评论弹窗会移动到软键盘上面
-                        .enableDrag(false)
+                        .enableDrag(true)
 //                        .shadowBgColor(Color.parseColor("#33000000"))
                         .asCustom(new PagerBottomPopup(getContext()))
                         .showPopup();
@@ -120,6 +119,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                 break;
             case R.id.btnPagerBottomDialog: //自定义的底部弹窗
                 new Popup.Builder(getContext())
+                        .navigationBarFollow(false)
 //                        .moveUpToKeyboard(false) //如果不加这个，评论弹窗会移动到软键盘上面
                         .asCustom(new PagerBottomDiloag(getContext()))
                         .showPopup();
@@ -149,7 +149,6 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
             case R.id.btnShowDrawerLeft: //像DrawerLayout一样的Drawer弹窗
                 new Popup.Builder(getContext())
 //                        .asCustom(new CustomDrawerPopupView(getContext()))
-                        .hasShadowBg(false)
                         .asCustom(new PagerDrawerPopup(getContext()))
 //                        .asCustom(new ListDrawerPopupView(getContext()))
                         .showPopup();
@@ -165,7 +164,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
             case R.id.btnFullScreenPopup: //全屏弹窗，看起来像Activity
                 new Popup.Builder(getContext())
                         .hasStatusBarShadow(true)
-                        .autoOpenSoftInput(true)
+//                        .autoOpenSoftInput(true)
                         .asCustom(new CustomFullScreenPopup(getContext()))
                         .showPopup();
                 break;

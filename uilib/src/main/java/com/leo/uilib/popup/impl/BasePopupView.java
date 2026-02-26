@@ -159,10 +159,12 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
                 }
             }
             if (shadowBgAnimator == null) {
-                shadowBgAnimator = new ShadowBgAnimator(this, getAnimationDuration(), getShadowBgColor());
+                shadowBgAnimator = new ShadowBgAnimator(this, getAnimationDuration(), getShadowBgColor(), getHostWindow(), popupInfo.navigationBarFollow);
             }
-            //3. 初始化动画执行器
-            shadowBgAnimator.initAnimator();
+            if (popupInfo != null && popupInfo.hasShadowBg) {
+                //3. 初始化动画执行器
+                shadowBgAnimator.initAnimator();
+            }
             if (popupContentAnimator != null) {
                 popupContentAnimator.initAnimator();
             }
@@ -179,6 +181,9 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
 //            setSize();
 //        }
         setSize();
+        if (shadowBgAnimator != null) {
+            shadowBgAnimator.onNavigationBarChange(show);
+        }
     }
 
     @Override
@@ -288,25 +293,6 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
                 popupInfo.popupListener.beforeShow();
             }
             attachToHost();
-            if (popupInfo.observeSoftKeyboard) {
-                if (popupInfo.isViewMode) {
-                    preSoftMode = getHostWindow().getAttributes().softInputMode;
-                    getHostWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                }
-                KeyboardUtils.registerSoftInputChangedListener(getHostWindow(), this, height -> {
-                    if (popupInfo.popupType == PopupType.AttachView) {
-                        return;
-                    }
-                    if (height == 0) { // 说明对话框隐藏
-                        PopupUtils.moveDown(BasePopupView.this);
-                        hasMoveUp = false;
-                    } else {
-                        //when show keyboard, move up
-                        PopupUtils.moveUpToKeyboard(height, BasePopupView.this);
-                        hasMoveUp = true;
-                    }
-                });
-            }
             PopupManager.getPopupManager().addPopup(getContext(), this);
 
             init();
@@ -408,11 +394,14 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
             try {
                 if (hostDialog != null) {
                     hostDialog.dismiss();
+                    hostDialog = null;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        shadowBgAnimator = null;
+        popupContentAnimator = null;
     }
 
     public Window getHostWindow() {
@@ -438,8 +427,28 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
             if (popupInfo != null && popupInfo.popupListener != null) {
                 popupInfo.popupListener.onShow();
             }
-            if (PopupUtils.getDecorViewInvisibleHeight((Activity) getContext()) > 0 && !hasMoveUp) {
-                PopupUtils.moveUpToKeyboard(PopupUtils.getDecorViewInvisibleHeight((Activity) getContext()), BasePopupView.this);
+            int invisibleHeight = PopupUtils.getDecorViewInvisibleHeight((Activity) getContext());
+            if (invisibleHeight > 0 && !hasMoveUp) {
+                PopupUtils.moveUpToKeyboard(invisibleHeight, BasePopupView.this);
+            }
+            if (popupInfo.observeSoftKeyboard) {
+                if (popupInfo.isViewMode) {
+                    preSoftMode = getHostWindow().getAttributes().softInputMode;
+                    getHostWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                }
+                KeyboardUtils.registerSoftInputChangedListener(getHostWindow(), BasePopupView.this, height -> {
+                    if (popupInfo.popupType == PopupType.AttachView) {
+                        return;
+                    }
+                    if (height == 0) { // 说明对话框隐藏
+                        PopupUtils.moveDown(BasePopupView.this);
+                        hasMoveUp = false;
+                    } else {
+                        //when show keyboard, move up
+                        PopupUtils.moveUpToKeyboard(height, BasePopupView.this);
+                        hasMoveUp = true;
+                    }
+                });
             }
         }
     };

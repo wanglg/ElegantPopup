@@ -131,6 +131,11 @@ public class Popup {
             return this;
         }
 
+        public Builder navigationBarFollow(Boolean follow) {
+            this.popupInfo.navigationBarFollow = follow;
+            return this;
+        }
+
         /**
          * 设置弹窗依附的View
          * isViewMode 自动设置true

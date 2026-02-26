@@ -46,6 +46,15 @@ public class ElegantHostDialog extends AppCompatDialog {
 
 
     @Override
+    public void onBackPressed() {
+        if (contentView != null) {
+            contentView.onBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Window window = getWindow();

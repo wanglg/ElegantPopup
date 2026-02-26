@@ -63,7 +63,7 @@ public class BottomPopupView extends BasePopupView {
                 if (popupInfo == null) {
                     return;
                 }
-                if (popupInfo.hasShadowBg) {
+                if (popupInfo.hasShadowBg && shadowBgAnimator != null) {
                     setBackgroundColor(shadowBgAnimator.calculateBgColor(percent));
                 }
             }
