@@ -44,7 +44,7 @@ XPopup库只支持view的弹框，这样在使用的时候，有一定的局限�
 ```
 
 ```
-implementation 'com.github.wanglg:ElegantPopup::0.0.4'
+implementation 'com.github.wanglg:ElegantPopup::0.0.5'
 ```
 
 需支持androidx和Java8支持
