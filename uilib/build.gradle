@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
@@ -32,11 +33,16 @@ dependencies {
     api rootProject.ext.dependencies["appcompatX"]
     api rootProject.ext.dependencies["material"]
 }
-//publish {
-//    userOrg = 'leowong'
-//    groupId = 'com.leo.uilib'
-//    artifactId = 'elegant-popup'
-//    publishVersion = '0.0.4'
-//    desc = '优雅的弹窗解决方案'
-//    website = 'https://github.com/wanglg/ElegantPopup'
-//}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.findByName('release')
+                groupId = 'com.github.wanglg'
+                artifactId = 'ElegantPopup'
+                version = '0.0.7'
+            }
+        }
+    }
+}
