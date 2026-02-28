@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
-
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
     namespace 'com.leo.uilib.popup'
@@ -25,6 +24,20 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+    // 添加这个配置，确保生成 release component
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+    libraryVariants.all { variant ->
+        variant.outputs.all { output ->
+            // 自定义 AAR 文件名
+            def fileName = "elegant-popup.aar"
+            outputFileName = fileName
+        }
+    }
 }
 
 dependencies {
@@ -33,15 +46,16 @@ dependencies {
     api rootProject.ext.dependencies["appcompatX"]
     api rootProject.ext.dependencies["material"]
 }
-
 afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
-                from components.findByName('release')
+                // ✅ 使用 from components.release 而不是 findByName
+                from components.release
                 groupId = 'com.github.wanglg'
                 artifactId = 'ElegantPopup'
-                version = '0.0.7'
+                // ✅ 从 git tag 获取版本号
+                version = System.getenv("JITPACK_VERSION") ?: "1.0.0-SNAPSHOT"
             }
         }
     }

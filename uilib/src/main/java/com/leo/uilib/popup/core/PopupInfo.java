@@ -48,10 +48,6 @@ public class PopupInfo {
      */
     public Bundle extObject;
 
-    /**
-     * 即时添加到窗体
-     */
-    public boolean immediateAdd;
 
 
     /**

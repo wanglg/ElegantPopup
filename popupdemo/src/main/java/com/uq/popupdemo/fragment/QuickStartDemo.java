@@ -148,6 +148,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                 break;
             case R.id.btnShowDrawerLeft: //像DrawerLayout一样的Drawer弹窗
                 new Popup.Builder(getContext())
+                        .hasShadowBg(false)
 //                        .asCustom(new CustomDrawerPopupView(getContext()))
                         .asCustom(new PagerDrawerPopup(getContext()))
 //                        .asCustom(new ListDrawerPopupView(getContext()))
@@ -158,6 +159,8 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                         .popupPosition(PopupPosition.Right)//右边
                         .hasStatusBarShadow(true) //启用状态栏阴影
                         .hasShadowBg(true)
+                        .navigationBarFollow(false)
+                        .autoFocusEditText(false)
                         .asCustom(drawerPopupView)
                         .showPopup();
                 break;
@@ -170,6 +173,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                 break;
             case R.id.btnFullScreenDialog: //全屏弹窗，看起来像Activity
                 new Popup.Builder(getContext())
+                        .hasStatusBarShadow(true)
                         .asCustom(new CustomFullScreenDialog(getContext()))
                         .showPopup();
                 break;

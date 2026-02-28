@@ -336,10 +336,6 @@ public class Popup {
             return this;
         }
 
-        public Builder immediateAdd() {
-            this.popupInfo.immediateAdd = true;
-            return this;
-        }
 
         public Builder shadowBgColor(int shadowBgColor) {
             this.popupInfo.shadowBgColor = shadowBgColor;

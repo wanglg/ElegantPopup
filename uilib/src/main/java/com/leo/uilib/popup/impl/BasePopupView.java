@@ -136,11 +136,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
                 focusAndProcessBackPress();
             }
         };
-        if (popupInfo.immediateAdd) {
-            runnable.run();
-        } else {
-            postDelayed(runnable, 50);
-        }
+        popupInfo.anchorView.post(runnable);
     }
 
     private boolean hasMoveUp = false;
@@ -297,14 +293,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
 
             init();
         };
-        //确保measured后使用
-        if (popupInfo.immediateAdd) {
-            runnable.run();
-        } else {
-            // 1. add PopupView to its decorView after measured.
-            popupInfo.anchorView.post(runnable);
-        }
-
+        runnable.run();
         return this;
     }
 
@@ -456,17 +445,19 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
     private ShowSoftInputTask showSoftInputTask;
 
     public void focusAndProcessBackPress() {
-        if (!popupInfo.isViewMode) {
-            return;
+        if (popupInfo.isViewMode) {
+            // 此处焦点可能被内容的EditText抢走，也需要给EditText也设置返回按下监听
+            setOnKeyListener(new BackPressListener());
         }
-        if (popupInfo.isRequestFocus) {
-            setFocusableInTouchMode(true);
-            requestFocus();
-        }
-        // 此处焦点可能被内容的EditText抢走，也需要给EditText也设置返回按下监听
-        setOnKeyListener(new BackPressListener());
-        if (!popupInfo.autoFocusEditText) {
-            showSoftInput(this);
+        handleFocus();
+    }
+
+    public void handleFocus() {
+        if (popupInfo.isViewMode) {
+            if (popupInfo.isRequestFocus) {
+                setFocusableInTouchMode(true);
+                requestFocus();
+            }
         }
 
         //let all EditText can process back pressed.
@@ -474,12 +465,19 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         PopupUtils.findAllEditText(list, (ViewGroup) getPopupContentView());
         for (int i = 0; i < list.size(); i++) {
             final EditText et = list.get(i);
-            et.setOnKeyListener(new BackPressListener());
-            if (i == 0 && popupInfo.autoFocusEditText) {
-                et.setFocusable(true);
-                et.setFocusableInTouchMode(true);
-                et.requestFocus();
-                showSoftInput(et);
+            if (i == 0) {
+                if (popupInfo.autoFocusEditText) {
+                    et.setFocusable(true);
+                    et.setFocusableInTouchMode(true);
+                    et.requestFocus();
+                    if (popupInfo.isViewMode) {
+                        et.setOnKeyListener(new BackPressListener());
+                    }
+                    showSoftInput(et);
+                } else {
+                    setFocusableInTouchMode(true);
+                    requestFocus();
+                }
             }
         }
     }
