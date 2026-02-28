@@ -31,13 +31,13 @@ android {
             withJavadocJar()
         }
     }
-    libraryVariants.all { variant ->
-        variant.outputs.all { output ->
-            // 自定义 AAR 文件名
-            def fileName = "elegant-popup.aar"
-            outputFileName = fileName
-        }
-    }
+//    libraryVariants.all { variant ->
+//        variant.outputs.all { output ->
+//            // 自定义 AAR 文件名
+//            def fileName = "elegant-popup.aar"
+//            outputFileName = fileName
+//        }
+//    }
 }
 
 dependencies {
