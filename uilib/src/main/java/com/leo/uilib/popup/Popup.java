@@ -131,8 +131,13 @@ public class Popup {
             return this;
         }
 
-        public Builder navigationBarFollow(Boolean follow) {
-            this.popupInfo.navigationBarFollow = follow;
+        public Builder fitNavigationBar(Boolean fitNavigationBar) {
+            this.popupInfo.fitNavigationBar = fitNavigationBar;
+            return this;
+        }
+
+        public Builder shadowBgFitNavigationBar(Boolean shadowBgFitNavigationBar) {
+            this.popupInfo.shadowBgFitNavigationBar = shadowBgFitNavigationBar;
             return this;
         }
 

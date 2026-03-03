@@ -1,5 +1,6 @@
 package com.leo.uilib.popup.impl.dialog;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -15,16 +16,21 @@ import androidx.appcompat.app.AppCompatDialog;
 
 import com.leo.uilib.popup.R;
 import com.leo.uilib.popup.impl.BasePopupView;
+import com.leo.uilib.popup.util.PopupUtils;
 
 /**
  * @author leo
  */
 public class ElegantHostDialog extends AppCompatDialog {
     BasePopupView contentView;
+    Activity activity;
 
     public ElegantHostDialog(@NonNull Context context) {
         super(context, R.style.Popup_TransparentDialog);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        if (context instanceof Activity) {
+            activity = ((Activity) context);
+        }
     }
 
     public ElegantHostDialog setContent(BasePopupView view) {
@@ -68,8 +74,9 @@ public class ElegantHostDialog extends AppCompatDialog {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
             window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
             window.getDecorView().setSystemUiVisibility(option);
+            PopupUtils.syncStatusAndNavIconColor(activity, this);
             window.setBackgroundDrawable(null);
 
             //remove status bar shadow
@@ -80,7 +87,8 @@ public class ElegantHostDialog extends AppCompatDialog {
             } else if (Build.VERSION.SDK_INT >= 21) {
                 setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, false);
                 getWindow().setStatusBarColor(Color.TRANSPARENT);
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS); //尝试兼容部分手机上的状态栏空白问题
+                getWindow().setNavigationBarColor(Color.TRANSPARENT);
+//                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS); //尝试兼容部分手机上的状态栏空白问题
             }
         }
 

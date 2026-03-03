@@ -119,7 +119,6 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                 break;
             case R.id.btnPagerBottomDialog: //自定义的底部弹窗
                 new Popup.Builder(getContext())
-                        .navigationBarFollow(false)
 //                        .moveUpToKeyboard(false) //如果不加这个，评论弹窗会移动到软键盘上面
                         .asCustom(new PagerBottomDiloag(getContext()))
                         .showPopup();
@@ -132,6 +131,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                 }
                 new Popup.Builder(getContext())
                         .enableDrag(true)
+                        .fitNavigationBar(true)
                         .asCustom(pagerBottomPopup)
                         .showPopup();
 
@@ -159,8 +159,8 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                         .popupPosition(PopupPosition.Right)//右边
                         .hasStatusBarShadow(true) //启用状态栏阴影
                         .hasShadowBg(true)
-                        .navigationBarFollow(false)
                         .autoFocusEditText(false)
+                        .shadowBgFitNavigationBar(false)
                         .asCustom(drawerPopupView)
                         .showPopup();
                 break;

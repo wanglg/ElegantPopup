@@ -1,6 +1,7 @@
 package com.leo.uilib.popup.util;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -491,6 +492,86 @@ public class PopupUtils {
 
         // 去除系统强制的半透明遮罩
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.setNavigationBarContrastEnforced(false);
+        }
+    }
+
+    /**
+     * 强行让 Dialog 的状态栏和导航栏图标颜色与 Activity 同步
+     */
+    public static void syncStatusAndNavIconColor(Activity activity, Dialog dialog) {
+        if (activity == null || dialog == null || dialog.getWindow() == null) return;
+
+        Window actWin = activity.getWindow();
+        Window dlgWin = dialog.getWindow();
+
+        // 1. 获取 Activity 当前的图标状态 (亮色模式标识)
+        boolean isLightStatus = false;
+        boolean isLightNav = false;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Android 11+ 原生获取方式
+            WindowInsetsController controller = actWin.getInsetsController();
+            if (controller != null) {
+                // 注意：原生 API 没有 is 方法，只能通过获取现有的 appearance 来判断（较复杂）
+                // 建议依然回退到 DecorView 判断，因为旧标志位在 R 上依然映射有效
+                int appearance = actWin.getDecorView().getSystemUiVisibility();
+                isLightStatus = (appearance & View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) != 0;
+                isLightNav = (appearance & View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR) != 0;
+            }
+        } else {
+            // Android 6.0 - 10.0 判断方式
+            int actVis = actWin.getDecorView().getSystemUiVisibility();
+            isLightStatus = (actVis & View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) != 0;
+            isLightNav = (actVis & View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR) != 0;
+        }
+
+        // 2. 应用到 Dialog
+        applyIconColor(dlgWin, isLightStatus, isLightNav);
+    }
+
+    /**
+     * 手动设置 Dialog 图标颜色模式
+     *
+     * @param isLightStatus true 为深色图标（适合浅色背景）
+     * @param isLightNav    true 为深色图标（适合浅色背景）
+     */
+    public static void applyIconColor(Window window, boolean isLightStatus, boolean isLightNav) {
+        if (window == null) return;
+
+        // 必须开启此 Flag 才能控制系统栏颜色
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Android 11+ (API 30+) 使用 WindowInsetsController
+            WindowInsetsController controller = window.getInsetsController();
+            if (controller != null) {
+                int statusFlag = isLightStatus ? WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS : 0;
+                int navFlag = isLightNav ? WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS : 0;
+
+                controller.setSystemBarsAppearance(statusFlag, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
+                controller.setSystemBarsAppearance(navFlag, WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+            }
+        }
+
+        // 兼容性兜底：即使是 Android 11+，设置旧的 SystemUiVisibility 依然在大多数机型上生效
+        int flags = window.getDecorView().getSystemUiVisibility();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // API 23+ 状态栏
+            if (isLightStatus) flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            else flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // API 26+ 导航栏
+            if (isLightNav) flags |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+            else flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+        }
+
+        window.getDecorView().setSystemUiVisibility(flags);
+
+        // API 29+ 禁用系统自动添加的对比度阴影（非常重要，防止透明栏变灰）
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.setStatusBarContrastEnforced(false);
             window.setNavigationBarContrastEnforced(false);
         }
     }

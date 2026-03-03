@@ -4,7 +4,7 @@ android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
     namespace 'com.leo.uilib.popup'
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion rootProject.ext.android["minSdkVersion"]
         targetSdkVersion rootProject.ext.android["targetSdkVersion"]
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

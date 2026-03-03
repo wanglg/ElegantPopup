@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -155,7 +156,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
                 }
             }
             if (shadowBgAnimator == null) {
-                shadowBgAnimator = new ShadowBgAnimator(this, getAnimationDuration(), getShadowBgColor(), getHostWindow(), popupInfo.navigationBarFollow);
+                shadowBgAnimator = new ShadowBgAnimator(this, getAnimationDuration(), getShadowBgColor());
             }
             if (popupInfo != null && popupInfo.hasShadowBg) {
                 //3. 初始化动画执行器
@@ -169,17 +170,7 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
 
     @Override
     public void onNavigationBarChange(boolean show) {
-//        if (!show) {
-////            applyFull();
-//            setSize();
-//        } else {
-////            applySize(true);
-//            setSize();
-//        }
         setSize();
-        if (shadowBgAnimator != null) {
-            shadowBgAnimator.onNavigationBarChange(show);
-        }
     }
 
     @Override
@@ -293,7 +284,12 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
 
             init();
         };
-        runnable.run();
+        if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
+            runnable.run();
+        } else {
+            popupInfo.anchorView.post(runnable);
+        }
+
         return this;
     }
 
@@ -314,36 +310,29 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
     }
 
     private void setSize() {
-        int navHeight = 0;
+
         View decorView = PopupUtils.context2Activity(this).getWindow().getDecorView();
         if (decorView == popupInfo.anchorView) {
-            //设置自己的大小，和Activity的contentView保持一致
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                View navBarView = decorView.findViewById(android.R.id.navigationBarBackground);
-                if (navBarView != null) {
-                    navHeight = PopupUtils.isLandscape(getContext()) && !PopupUtils.isTablet() ?
-                            navBarView.getMeasuredWidth() : navBarView.getMeasuredHeight();
-                }
-            } else {
-                navHeight = PopupUtils.isNavBarVisible(PopupUtils.context2Activity(this).getWindow()) ?
-                        PopupUtils.getNavBarHeight() : 0;
-            }
-            View activityContent = getActivityContentView();
+            ViewGroup.MarginLayoutParams params;
             if (getLayoutParams() == null) {
-                ViewGroup.MarginLayoutParams params = new MarginLayoutParams(activityContent.getMeasuredWidth(),
-                        decorView.getMeasuredHeight() -
-                                (PopupUtils.isLandscape(getContext()) && !PopupUtils.isTablet() ? 0 : navHeight));
-                if (PopupUtils.isLandscape(getContext())) {
-                    params.leftMargin = getActivityContentLeft();
-                }
-                setLayoutParams(params);
+                params = new MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT);
             } else {
-                ViewGroup.LayoutParams vp = getLayoutParams();
-                vp.height = decorView.getMeasuredHeight() -
-                        (PopupUtils.isLandscape(getContext()) && !PopupUtils.isTablet() ? 0 : navHeight);
-                vp.width = activityContent.getMeasuredWidth();
-                setLayoutParams(vp);
+                params = (MarginLayoutParams) getLayoutParams();
+                params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             }
+            if (PopupUtils.isNavBarVisible(PopupUtils.context2Activity(this).getWindow())) {
+                int navHeight = PopupUtils.getNavBarHeight();
+                if (popupInfo.shadowBgFitNavigationBar) {
+                    if (!popupInfo.fitNavigationBar) {
+                        setPadding(0, 0, 0, navHeight);
+                    }
+                } else {
+                    params.bottomMargin = navHeight;
+                }
+            }
+            setLayoutParams(params);
 
         } else {
             if (getLayoutParams() == null) {

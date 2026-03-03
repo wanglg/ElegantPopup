@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.gyf.immersionbar.ImmersionBar;
 import com.leo.uilib.popup.Popup;
 import com.leo.uilib.popup.core.PopupManager;
 import com.uq.popupdemo.fragment.QuickStartDemo;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         Popup.setPrimaryColor(getResources().getColor(R.color.colorPrimary));
 //        XPopup.setAnimationDuration(1000);
 //        XPopup.setPrimaryColor(Color.RED);
+        ImmersionBar.with(this).navigationBarColor(R.color.navigationBarColor).fitsSystemWindows(true).statusBarColor(R.color.statusBarColor).navigationBarDarkIcon(true).init();
     }
 
     @Override
