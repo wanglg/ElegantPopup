@@ -3,10 +3,12 @@ package com.leo.uilib.popup.impl;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -45,14 +47,15 @@ import com.leo.uilib.popup.enums.PopupType;
 import com.leo.uilib.popup.impl.dialog.ElegantHostDialog;
 import com.leo.uilib.popup.util.KeyboardUtils;
 import com.leo.uilib.popup.util.PopupUtils;
-import com.leo.uilib.popup.util.navbar.NavigationBarObserver;
-import com.leo.uilib.popup.util.navbar.OnNavigationBarListener;
+import com.leo.uilib.popup.util.navbar.NavigationBarManager;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
-public abstract class BasePopupView extends FrameLayout implements OnNavigationBarListener,
+public abstract class BasePopupView extends FrameLayout implements NavigationBarManager.OnChangeListener,
         IBack, IPopup, IPopupWindow, LifecycleObserver {
+    public static final String TAG = "BasePopupView";
     public PopupInfo popupInfo;
     protected PopupAnimator popupContentAnimator;
     protected ShadowBgAnimator shadowBgAnimator;
@@ -168,9 +171,15 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
         }
     }
 
+
     @Override
-    public void onNavigationBarChange(boolean show) {
-        setSize();
+    public void onNavigationBarHide() {
+        adjustSize(false, 0);
+    }
+
+    @Override
+    public void onNavigationBarShow(int height) {
+        adjustSize(true, height);
     }
 
     @Override
@@ -296,7 +305,6 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
     ElegantHostDialog hostDialog;
 
     private void attachToHost() {
-        setSize();
         if (popupInfo.isViewMode) {
             popupInfo.anchorView.addView(BasePopupView.this);
         } else {
@@ -307,9 +315,21 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
                 hostDialog.show();
             }
         }
+        try {
+            if (NavigationBarManager.isVisible(PopupUtils.context2Activity(this).getWindow())) {
+                int navHeight = NavigationBarManager.getHeight(PopupUtils.context2Activity(this).getWindow());
+                adjustSize(true, navHeight);
+            } else {
+                adjustSize(false, 0);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, Objects.requireNonNull(e.getMessage()));
+        }
+
+
     }
 
-    private void setSize() {
+    private void adjustSize(boolean navigationBarVisible, int navigationBarHeight) {
 
         View decorView = PopupUtils.context2Activity(this).getWindow().getDecorView();
         if (decorView == popupInfo.anchorView) {
@@ -322,15 +342,17 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
                 params.height = ViewGroup.LayoutParams.MATCH_PARENT;
                 params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             }
-            if (PopupUtils.isNavBarVisible(PopupUtils.context2Activity(this).getWindow())) {
-                int navHeight = PopupUtils.getNavBarHeight();
+            if (navigationBarVisible) {
                 if (popupInfo.shadowBgFitNavigationBar) {
                     if (!popupInfo.fitNavigationBar) {
-                        setPadding(0, 0, 0, navHeight);
+                        setPadding(0, 0, 0, navigationBarHeight);
                     }
                 } else {
-                    params.bottomMargin = navHeight;
+                    params.bottomMargin = navigationBarHeight;
                 }
+            } else {
+                params.bottomMargin = 0;
+                setPadding(0, 0, 0, 0);
             }
             setLayoutParams(params);
 
@@ -820,8 +842,9 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        NavigationBarObserver.getInstance().register(getContext());
-        NavigationBarObserver.getInstance().addOnNavigationBarListener(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            NavigationBarManager.addListener(getHostWindow(), this);
+        }
         if (getContext() instanceof FragmentActivity) {
             ((FragmentActivity) getContext()).getLifecycle().addObserver(this);
         }
@@ -844,7 +867,9 @@ public abstract class BasePopupView extends FrameLayout implements OnNavigationB
             }
         }
         hasMoveUp = false;
-        NavigationBarObserver.getInstance().removeOnNavigationBarListener(BasePopupView.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            NavigationBarManager.removeListener(getHostWindow());
+        }
         if (popupInfo != null) {
             if (popupInfo.observeSoftKeyboard) {
                 KeyboardUtils.removeLayoutChangeListener(getHostWindow(), BasePopupView.this);

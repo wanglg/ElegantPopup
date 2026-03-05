@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
@@ -28,34 +31,16 @@ public class FullScreenPopupView extends CenterPopupView {
     protected void initPopupContent() {
         super.initPopupContent();
         popupInfo.hasShadowBg = false;
+        applySize();
     }
 
-//    @Override
-//    public void onNavigationBarChange(boolean show) {
-//        if (!show) {
-//            applyFull();
-//            getPopupContentView().setPadding(0, 0, 0, 0);
-//        } else {
-//            applySize(true);
-//        }
-//    }
 
-//    @Override
-//    protected void applySize(boolean isShowNavBar) {
-//        int rotation = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-//        View contentView = getPopupContentView();
-//        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) contentView.getLayoutParams();
-//        params.gravity = Gravity.TOP;
-//        contentView.setLayoutParams(params);
-//
-//        int actualNabBarHeight = isShowNavBar || PopupUtils.isNavBarVisible(getContext()) ? PopupUtils.getNavBarHeight() : 0;
-//        if (rotation == 0) {
-//            contentView.setPadding(contentView.getPaddingLeft(), contentView.getPaddingTop(), contentView.getPaddingRight(),
-//                    actualNabBarHeight);
-//        } else if (rotation == 1 || rotation == 3) {
-//            contentView.setPadding(contentView.getPaddingLeft(), contentView.getPaddingTop(), contentView.getPaddingRight(), 0);
-//        }
-//    }
+    protected void applySize() {
+        View contentView = getPopupContentView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) contentView.getLayoutParams();
+        params.gravity = Gravity.TOP;
+        contentView.setLayoutParams(params);
+    }
 
     Paint paint = new Paint();
     Rect shadowRect;
@@ -78,6 +63,6 @@ public class FullScreenPopupView extends CenterPopupView {
 
     @Override
     protected PopupAnimator getPopupAnimator() {
-        return new TranslateAnimator(getPopupContentView(),getAnimationDuration(), PopupAnimation.TranslateFromBottom);
+        return new TranslateAnimator(getPopupContentView(), getAnimationDuration(), PopupAnimation.TranslateFromBottom);
     }
 }

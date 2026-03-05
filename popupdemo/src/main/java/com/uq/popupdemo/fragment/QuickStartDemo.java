@@ -105,6 +105,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
 //                        .moveUpToKeyboard(false) //如果不加这个，评论弹窗会移动到软键盘上面
                         .enableDrag(true)
 //                        .shadowBgColor(Color.parseColor("#33000000"))
+                        .shadowBgFitNavigationBar(false)
                         .asCustom(new PagerBottomPopup(getContext()))
                         .showPopup();
                 break;
@@ -183,6 +184,7 @@ public class QuickStartDemo extends BaseFragment implements View.OnClickListener
                             .dismissOnTouchOutside(false)
                             .dismissOnBackPressed(false)
                             .isViewMode(false)
+                            .shadowBgFitNavigationBar(false)
                             .launchModel(LaunchModel.DROP)
                             .setListener(new SimplePopupListener() {
                                 @Override

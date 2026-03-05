@@ -265,44 +265,44 @@ public class PopupUtils {
         return isVisible;
     }
 
-    public static boolean isNavBarVisible(Window window) {
-        boolean isVisible = false;
-        ViewGroup decorView = (ViewGroup) window.getDecorView();
-        for (int i = 0, count = decorView.getChildCount(); i < count; i++) {
-            final View child = decorView.getChildAt(i);
-            final int id = child.getId();
-            if (id != View.NO_ID) {
-                try {
-                    String resourceEntryName = window.getContext().getResources().getResourceEntryName(id);
-                    if ("navigationBarBackground".equals(resourceEntryName)
-                            && child.getVisibility() == View.VISIBLE) {
-                        isVisible = true;
-                        break;
-                    }
-                } catch (Resources.NotFoundException e) {
-                    break;
-                }
-            }
-        }
-        if (isVisible) {
-            // 对于三星手机，android10以下非OneUI2的版本，比如 s8，note8 等设备上，
-            // 导航栏显示存在bug："当用户隐藏导航栏时显示输入法的时候导航栏会跟随显示"，会导致隐藏输入法之后判断错误
-            // 这个问题在 OneUI 2 & android 10 版本已修复
-            if (FuckRomUtils.isSamsung()
-                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
-                    && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                try {
-                    return Settings.Global.getInt(window.getContext().getContentResolver(), "navigationbar_hide_bar_enabled") == 0;
-                } catch (Exception ignore) {
-                }
-            }
-
-            int visibility = decorView.getSystemUiVisibility();
-            isVisible = (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0;
-        }
-
-        return isVisible;
-    }
+//    public static boolean isNavBarVisible(Window window) {
+//        boolean isVisible = false;
+//        ViewGroup decorView = (ViewGroup) window.getDecorView();
+//        for (int i = 0, count = decorView.getChildCount(); i < count; i++) {
+//            final View child = decorView.getChildAt(i);
+//            final int id = child.getId();
+//            if (id != View.NO_ID) {
+//                try {
+//                    String resourceEntryName = window.getContext().getResources().getResourceEntryName(id);
+//                    if ("navigationBarBackground".equals(resourceEntryName)
+//                            && child.getVisibility() == View.VISIBLE) {
+//                        isVisible = true;
+//                        break;
+//                    }
+//                } catch (Resources.NotFoundException e) {
+//                    break;
+//                }
+//            }
+//        }
+//        if (isVisible) {
+//            // 对于三星手机，android10以下非OneUI2的版本，比如 s8，note8 等设备上，
+//            // 导航栏显示存在bug："当用户隐藏导航栏时显示输入法的时候导航栏会跟随显示"，会导致隐藏输入法之后判断错误
+//            // 这个问题在 OneUI 2 & android 10 版本已修复
+//            if (FuckRomUtils.isSamsung()
+//                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
+//                    && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+//                try {
+//                    return Settings.Global.getInt(window.getContext().getContentResolver(), "navigationbar_hide_bar_enabled") == 0;
+//                } catch (Exception ignore) {
+//                }
+//            }
+//
+//            int visibility = decorView.getSystemUiVisibility();
+//            isVisible = (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0;
+//        }
+//
+//        return isVisible;
+//    }
 
     /**
      * 判断底部导航栏是否可见（Android 5.0+）
@@ -326,7 +326,8 @@ public class PopupUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Android 11+ 使用新API
             Insets navigationBarInsets = insets.getInsets(WindowInsets.Type.navigationBars());
-            return navigationBarInsets.bottom > 0;
+            boolean isVisible = insets.isVisible(WindowInsets.Type.navigationBars());
+            return navigationBarInsets.bottom > 0 && isVisible;
         } else {
             // Android 5.0 - 10
             int bottomInset = 0;
